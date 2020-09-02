@@ -2,14 +2,16 @@ package Api_Banco.Entidades;
 
 import java.sql.Date;
 
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.br.CPF;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -28,12 +30,13 @@ public class Cliente {
 	@Size(max = 12)
 	private String telefone;
 	
-	@OneToOne
+	@OneToOne(cascade= CascadeType.ALL)
 	private Endereco endereco;
 	
+	/*
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataDeAniversário;
-	
+	*/
 	@OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
 	private Conta conta;
 	
@@ -64,12 +67,14 @@ public class Cliente {
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
+	/*
 	public Date getDataDeAniversário() {
 		return dataDeAniversário;
 	}
 	public void setDataDeAniversário(Date dataDeAniversário) {
 		this.dataDeAniversário = dataDeAniversário;
 	}
+	*/
 	public Conta getConta() {
 		return conta;
 	}

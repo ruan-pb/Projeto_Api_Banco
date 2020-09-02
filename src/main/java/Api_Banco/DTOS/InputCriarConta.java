@@ -3,8 +3,7 @@ package Api_Banco.DTOS;
 import Api_Banco.Entidades.Conta;
 
 public class InputCriarConta { 
-	private String NumeroDaAgencia;
-	private String Numero_Da_Conta;
+	private String agencia;
 	private String senha;
 	private String cpf;
 	private String nome;
@@ -15,35 +14,28 @@ public class InputCriarConta {
 	private String estado;
 	
 	public InputCriarConta(Conta conta) {
-		this.NumeroDaAgencia = conta.getNumeroDaAgencia();
-		this.Numero_Da_Conta = conta.getConta();
+		this.agencia = conta.getAgencia();
 		this.senha = conta.getSenha();
-		/*
-		//this.cpf = conta.getCliente().getCpf();
+		this.cpf = conta.getCliente().getCpf();
+		this.nome = conta.getCliente().getNome();
 		this.telefone = conta.getCliente().getTelefone();
 		this.rua = conta.getCliente().getEndereco().getRua();
 		this.bairro = conta.getCliente().getEndereco().getBairro();
 		this.cidade = conta.getCliente().getEndereco().getCidade();
 		this.estado = conta.getCliente().getEndereco().getEstado();
-		*/
+		
 	}
 	public InputCriarConta() {}
 
-	public String getNumero_Da_Agencia() {
-		return NumeroDaAgencia;
+	public String getAgencia() {
+		return this.agencia;
 	}
 
-	public void setNumero_Da_Agencia(String numeroDaAgencia) {
-		NumeroDaAgencia = numeroDaAgencia;
+	public void setAgencia(String numeroDaAgencia) {
+		agencia = numeroDaAgencia;
 	}
 
-	public String getNumero_Da_Conta() {
-		return Numero_Da_Conta;
-	}
-
-	public void setNumero_Da_Conta(String numero_Da_Conta) {
-		Numero_Da_Conta = numero_Da_Conta;
-	}
+	
 
 	public String getSenha() {
 		return senha;

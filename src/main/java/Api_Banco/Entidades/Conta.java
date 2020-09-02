@@ -1,5 +1,6 @@
 package Api_Banco.Entidades;
 
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import org.hibernate.annotations.Cascade;
+
 
 
 
@@ -19,11 +20,13 @@ public class Conta {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private String conta;
-	private String NumeroDaAgencia;
+	private String Agencia;
 	private String senha;
 	private double saldo;
 	
-	@OneToOne
+	
+	
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "conta_cliente")
 	private Cliente cliente;
 	
@@ -46,12 +49,12 @@ public class Conta {
 	public Conta() {}
 
 	
-	public String getNumeroDaAgencia() {
-		return NumeroDaAgencia;
+	public String getAgencia() {
+		return this.Agencia;
 	}
 
-	public void setNumeroDaAgencia(String numeroDaAgencia) {
-		NumeroDaAgencia = numeroDaAgencia;
+	public void setAgencia(String numeroDaAgencia) {
+		this.Agencia = numeroDaAgencia;
 	}
 
 	public String getConta() {
@@ -125,7 +128,7 @@ public class Conta {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((NumeroDaAgencia == null) ? 0 : NumeroDaAgencia.hashCode());
+		result = prime * result + ((Agencia == null) ? 0 : Agencia.hashCode());
 		result = prime * result + ((conta == null) ? 0 : conta.hashCode());
 		return result;
 	}
@@ -139,10 +142,10 @@ public class Conta {
 		if (getClass() != obj.getClass())
 			return false;
 		Conta other = (Conta) obj;
-		if (NumeroDaAgencia == null) {
-			if (other.NumeroDaAgencia != null)
+		if (Agencia == null) {
+			if (other.Agencia != null)
 				return false;
-		} else if (!NumeroDaAgencia.equals(other.NumeroDaAgencia))
+		} else if (!Agencia.equals(other.Agencia))
 			return false;
 		if (conta == null) {
 			if (other.conta != null)
@@ -158,7 +161,7 @@ public class Conta {
 		this.saldo += valor;
 	}
 	public boolean isValid() {
-		return !this.NumeroDaAgencia.isBlank()&&!this.conta.isBlank()&&!this.cliente.getCpf().isBlank();
+		return !this.Agencia.isBlank()&&!this.conta.isBlank()&&!this.cliente.getCpf().isBlank();
 	}
 	
 	
