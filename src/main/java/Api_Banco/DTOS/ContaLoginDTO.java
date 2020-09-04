@@ -10,11 +10,13 @@ public class ContaLoginDTO {
 	
 	
 	public ContaLoginDTO(Conta conta) {
+		super();
 		this.numeroAgencia = conta.getAgencia();
 		this.numeroConta = conta.getConta();
 		this.senha = conta.getSenha();
 		
 	}
+	public ContaLoginDTO() {}
 	
 	
 	
