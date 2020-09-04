@@ -1,0 +1,127 @@
+[{
+   
+	 "agencia":"111",
+	 "senha":"certo",
+	 "cliente":{
+	 
+	 	 "cpf":"03251718",
+		 "nome":"Futuro Dev",
+		 "telefone":"4002-8922",
+		 
+		 "endereco":{
+			 "rua":"Ibiza",
+			 "bairro":"Spans",
+			 "cidade":"guadalarara",
+			 "estado":"Rj"
+	 
+		 }
+	 }
+	
+	
+},
+{
+   
+	 "agencia":"222",
+	 "senha":"deu certo",
+	 "cliente":{
+	 
+	 	 "cpf":"12362579",
+		 "nome":"Ruan Cruz ",
+		 "telefone":"987442112",
+		 
+		 "endereco":{
+			 "rua":"Epitacio Madruga",
+			 "bairro":"Isaura",
+			 "cidade":"Itapororoca",
+			 "estado":"PB"
+	 
+		 }
+	 }
+	
+	
+},
+{
+   
+	 "agencia":"333",
+	 "senha":"flamengo",
+	 "cliente":{
+	 
+	 	 "cpf":"5987111",
+		 "nome":"Valdir Cruz ",
+		 "telefone":"988155708",
+		 
+		 "endereco":{
+			 "rua":"Campo verde",
+			 "bairro":"centro",
+			 "cidade":"Mamanguape",
+			 "estado":"PB"
+	 
+		 }
+	 }
+	
+	
+},
+{
+   
+	 "agencia":"444",
+	 "senha":"estudos",
+	 "cliente":{
+	 
+	 	 "cpf":"9874613",
+		 "nome":"Victor Hugo Cruz ",
+		 "telefone":"986231433",
+		 
+		 "endereco":{
+			 "rua":"rua frei egidio madruga",
+			 "bairro":"O melhor",
+			 "cidade":"Joao Pessoa",
+			 "estado":"PB"
+	 
+		 }
+	 }
+	
+	
+},
+{
+   
+	 "agencia":"444",
+	 "senha":"esperanca",
+	 "cliente":{
+	 
+	 	 "cpf":"4498716",
+		 "nome":"Elineusa Soares ",
+		 "telefone":"987631409",
+		 
+		 "endereco":{
+			 "rua":"Mangabeira",
+			 "bairro":"Cristo",
+			 "cidade":"Campina Grande",
+			 "estado":"PB"
+	 
+		 }
+	 }
+	
+	
+},
+{
+   
+	 "agencia":"555",
+	 "senha":"fe2019",
+	 "cliente":{
+	 
+	 	 "cpf":"74782391",
+		 "nome":"Ana Carolina ",
+		 "telefone":"986156714",
+		 
+		 "endereco":{
+			 "rua":"rua conego Faustino",
+			 "bairro":"Bairro do cruzeiro",
+			 "cidade":"Itapororoca",
+			 "estado":"PB"
+	 
+		 }
+	 }
+	
+	
+}
+]

@@ -34,6 +34,8 @@ public class Conta {
 	
 	//private Conta extrato;
 	
+	public Conta() {}
+	
 	@OneToOne
 	@JoinColumn(name="conta_emprestimo")
 	private Emprestimo emprestimo;
@@ -46,7 +48,7 @@ public class Conta {
 	@JoinColumn(name="conta_credito")
 	private CartaoDeCredito credito;
 	
-	public Conta() {}
+	
 
 	
 	public String getAgencia() {
@@ -113,16 +115,7 @@ public class Conta {
 	public void setCredito(CartaoDeCredito credito) {
 		this.credito = credito;
 	}
-/*
-	public void adicionarElementoNoExtrato(Conta conta) {
-		this.extrato.add(conta);
-		
-	}
-	public void RemoverElementoNoExtrato(Conta conta) {
-		this.extrato.remove(conta);
-		
-	}
-	*/
+
 
 	@Override
 	public int hashCode() {

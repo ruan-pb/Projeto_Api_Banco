@@ -19,7 +19,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 public class Cliente {
 	
 	@Id
-	@NotBlank
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+	
+	@Size(max = 11)
 	private String cpf;
 	
 	@Size(max = 20)
