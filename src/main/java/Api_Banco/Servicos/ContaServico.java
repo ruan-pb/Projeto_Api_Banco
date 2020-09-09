@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import Api_Banco.DTOS.ContaDepositoDTO;
 import Api_Banco.DTOS.InputCriarConta;
 import Api_Banco.Entidades.Conta;
 import Api_Banco.Exceptions.ContaInexistente;
@@ -25,6 +26,10 @@ public class ContaServico {
 
 	@Autowired
 	private ContaRepositorio contaBD;
+	
+	
+	@Autowired
+	private JWTServico jwtServico;
 	
 	public ContaServico() {}
 	
@@ -52,20 +57,9 @@ public class ContaServico {
 		}
 		
 	}
-	
-	
-	
-	
-	
-	
-	
 
 	public InputCriarConta criarConta(Conta conta) {
-		/*
-		if (conta.isValid()) {
-			throw new ContaInvalida();
-		}
-*/
+	
 		boolean existiConta = existiConta(conta.getConta());
 		if (existiConta == true) {
 			throw new ContaInvalida();
@@ -96,5 +90,59 @@ public class ContaServico {
 		return existi;
 
 	}
+	public ContaDepositoDTO depositar(Conta conta) {
+		Optional<Conta> conta01 = contaBD.findByConta(conta.getConta());
+		Conta conta02 = conta01.get();
+		
+		if(conta.getAgencia().equals(conta02.getAgencia())&&conta.getConta().equals(conta02.getConta())) {
+			conta02.creditar(conta.getSaldo());
+			
+			
+		}
+		else {
+			throw new ContaInvalida();
+		}
+		
+		contaBD.save(conta02);
+		return new ContaDepositoDTO(conta02);
+		
+		
+		
+	}
+	public Conta validarConta(Optional<String> id) {
+		if(id.isEmpty()) {
+			throw new ContaInexistente();
+		}
+		Optional<Conta>conta = contaBD.findByConta(id.get());
+		if(conta.isEmpty()) {
+			throw new ContaInexistente();
+		}
+		return conta.get();
+		
+		
+	}
+	public List<Conta> listaDeContas(){
+		return contaBD.findAll();
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

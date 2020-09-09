@@ -14,6 +14,7 @@ import javax.validation.constraints.Size;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Cliente {
@@ -29,7 +30,6 @@ public class Cliente {
 	@NotBlank
 	private String nome;
 	
-	@NotBlank
 	@Size(max = 12)
 	private String telefone;
 	
@@ -40,6 +40,7 @@ public class Cliente {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataDeAniversário;
 	*/
+	@JsonIgnore
 	@OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
 	private Conta conta;
 	

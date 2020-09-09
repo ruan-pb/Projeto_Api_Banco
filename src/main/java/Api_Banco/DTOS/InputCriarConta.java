@@ -5,6 +5,7 @@ import Api_Banco.Entidades.Conta;
 public class InputCriarConta { 
 	private String agencia;
 	private String senha;
+	private double saldoInicial;
 	private String cpf;
 	private String nome;
 	private String telefone;
@@ -16,9 +17,11 @@ public class InputCriarConta {
 	public InputCriarConta(Conta conta) {
 		this.agencia = conta.getAgencia();
 		this.senha = conta.getSenha();
+		this.saldoInicial = conta.getSaldo();
 		this.cpf = conta.getCliente().getCpf();
 		this.nome = conta.getCliente().getNome();
 		this.telefone = conta.getCliente().getTelefone();
+		
 		this.rua = conta.getCliente().getEndereco().getRua();
 		this.bairro = conta.getCliente().getEndereco().getBairro();
 		this.cidade = conta.getCliente().getEndereco().getCidade();
@@ -68,7 +71,14 @@ public class InputCriarConta {
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
+	
 
+	public double getSaldoInicial() {
+		return saldoInicial;
+	}
+	public void setSaldoInicial(double saldoInicial) {
+		this.saldoInicial = saldoInicial;
+	}
 	public String getRua() {
 		return rua;
 	}

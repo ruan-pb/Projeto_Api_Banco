@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 
@@ -23,6 +25,7 @@ public class Conta {
 	private String Agencia;
 	private String senha;
 	private double saldo;
+	
 	
 	
 	
@@ -156,6 +159,13 @@ public class Conta {
 	public boolean isValid() {
 		return !this.Agencia.isBlank()&&!this.conta.isBlank()&&!this.cliente.getCpf().isBlank();
 	}
+
+	@Override
+	public String toString() {
+		return "Conta [conta=" + conta + ", Agencia=" + Agencia + ", senha=" + senha +", saldo=" +  String.format("%.2f", this.saldo)+ ", cliente="
+				+ cliente + ", emprestimo=" + emprestimo + ", poupanca=" + poupanca + ", credito=" + credito + "]";
+	}
+	
 	
 	
 	

@@ -1,13 +1,19 @@
 package Api_Banco.Controladores;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import Api_Banco.DTOS.ContaDepositoDTO;
 import Api_Banco.DTOS.InputCriarConta;
 import Api_Banco.Entidades.Conta;
 import Api_Banco.Exceptions.ContaInvalida;
@@ -17,25 +23,41 @@ import Api_Banco.Servicos.ContaServico;
 @RestController
 @RequestMapping("/conta")
 public class ContaControlador {
-	
+
 	@Autowired
 	private ContaServico contaServico;
-	
-	
-	
+
 	@PostMapping("/criarConta")
-	public ResponseEntity<InputCriarConta> abrirConta(@RequestBody Conta conta){
+	public ResponseEntity<InputCriarConta> abrirConta(@RequestBody Conta conta) {
+
 		try {
-			return new ResponseEntity<InputCriarConta>(contaServico.criarConta(conta),HttpStatus.CREATED);
-			
-		}
-		catch(ContaJaExisti e) {
+			return new ResponseEntity<InputCriarConta>(contaServico.criarConta(conta), HttpStatus.CREATED);
+
+		} catch (ContaJaExisti e) {
 			return new ResponseEntity<>(HttpStatus.CONFLICT);
-		}
-		catch(ContaInvalida e) {
+		} catch (ContaInvalida e) {
 			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
-		
+
 	}
 
+	@PutMapping("/deposito")
+	public ResponseEntity<ContaDepositoDTO> depositar(@RequestBody Conta conta) {
+		try {
+			return new ResponseEntity<ContaDepositoDTO>(contaServico.depositar(conta), HttpStatus.OK);
+		} catch (ContaInvalida e) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} catch (NoSuchElementException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+	}
+	@GetMapping("/lista")
+	public ResponseEntity<List<Conta>> lista(){
+		return new ResponseEntity<List<Conta>> (contaServico.listaDeContas(),HttpStatus.OK);
+		
+		
+		
+
+}
 }
