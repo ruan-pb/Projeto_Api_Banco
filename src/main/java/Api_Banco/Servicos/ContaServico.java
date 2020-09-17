@@ -3,8 +3,10 @@ package Api_Banco.Servicos;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -155,6 +157,19 @@ public class ContaServico {
 
 	public List<Conta> listaDeContas() {
 		return contaBD.findAll();
+	}
+	
+	public List<Conta> listaDeContaDeSaldoMenor(double valor){
+		return contaBD.findAll().stream().filter(x -> x.getSaldo() <valor).collect(Collectors.toList());
+		/*
+		List<Conta> conta = new ArrayList<Conta>();
+		for(Conta c:contaBD.findAll()) {
+			if(c.getSaldo()<valor) {
+				conta.add(c);
+			}
+			
+		}
+		*/
 	}
 
 }

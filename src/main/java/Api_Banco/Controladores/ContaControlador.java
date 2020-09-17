@@ -57,37 +57,44 @@ public class ContaControlador {
 		}
 
 	}
+
 	@PutMapping("/sacar")
-	public ResponseEntity<ContaSaqueDTO> sacar(@RequestBody Conta conta, @RequestHeader ("Authorization")String token) {
+	public ResponseEntity<ContaSaqueDTO> sacar(@RequestBody Conta conta, @RequestHeader("Authorization") String token) {
 		try {
-			return new ResponseEntity<ContaSaqueDTO>(contaServico.saque(conta,token), HttpStatus.OK);
+			return new ResponseEntity<ContaSaqueDTO>(contaServico.saque(conta, token), HttpStatus.OK);
 		} catch (ContaInvalida e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		} catch (NoSuchElementException e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		catch(SaldoInsuficiente e) {
+		} catch (SaldoInsuficiente e) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 
 	}
-	
+
 	@GetMapping("/buscarConta/{id}")
-	public ResponseEntity<Conta> buscarConta(@PathVariable String id){
+	public ResponseEntity<Conta> buscarConta(@PathVariable String id) {
 		try {
-			return new ResponseEntity<Conta>(contaServico.buscarConta(id),HttpStatus.OK);
-		}
-		catch(ContaInexistente e) {
+			return new ResponseEntity<Conta>(contaServico.buscarConta(id), HttpStatus.OK);
+		} catch (ContaInexistente e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
-	
-	@GetMapping("/lista")
-	public ResponseEntity<List<Conta>> lista(){
-		return new ResponseEntity<List<Conta>> (contaServico.listaDeContas(),HttpStatus.OK);
-		
-		
-		
 
-}
+	@GetMapping("/lista")
+	public ResponseEntity<List<Conta>> lista() {
+		return new ResponseEntity<List<Conta>>(contaServico.listaDeContas(), HttpStatus.OK);
+
+	}
+	@GetMapping("/listacontasmenores/{valor}")
+	public ResponseEntity<List<Conta>> listaDeContaComSaldoMenor(@PathVariable double valor){
+		try {
+			return new ResponseEntity<>(contaServico.listaDeContaDeSaldoMenor(valor),HttpStatus.OK);
+		}
+		catch(NoSuchElementException e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			
+		}
+		
+	}
 }
