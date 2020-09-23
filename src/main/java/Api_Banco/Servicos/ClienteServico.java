@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import Api_Banco.DTOS.EnderecoCpfDTO;
 import Api_Banco.DTOS.EnderecoNomeDTO;
+import Api_Banco.DTOS.ListaDTOCliente;
 import Api_Banco.Entidades.Cliente;
 import Api_Banco.Exceptions.ContaInexistente;
 import Api_Banco.Repositorio.ClienteRepositorio;
@@ -23,8 +24,10 @@ public class ClienteServico {
 	
 	
 	
-	public List<Cliente> ListaDeClienteEmOrdemAlfabetica(){
-		return clienteBD.findByOrderByNomeAsc();
+	public List<ListaDTOCliente> ListaDeClienteEmOrdemAlfabetica(){
+		List<Cliente> lista = clienteBD.findByOrderByNomeAsc();
+		List<ListaDTOCliente> listaDto = lista.stream().map(x -> new ListaDTOCliente(x)).collect(Collectors.toList());
+		return listaDto;
 	}
 	
 	public EnderecoCpfDTO encontraEnderecoPorCpf(String cpf) {

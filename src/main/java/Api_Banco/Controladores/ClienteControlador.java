@@ -13,6 +13,7 @@ import org.springframework.web.client.HttpServerErrorException.BadGateway;
 
 import Api_Banco.DTOS.EnderecoCpfDTO;
 import Api_Banco.DTOS.EnderecoNomeDTO;
+import Api_Banco.DTOS.ListaDTOCliente;
 import Api_Banco.Entidades.Cliente;
 import Api_Banco.Exceptions.ContaInexistente;
 import Api_Banco.Servicos.ClienteServico;
@@ -26,12 +27,12 @@ public class ClienteControlador {
 	
 	
 	@GetMapping("/listaAlfabetica")
-	public ResponseEntity<List<Cliente>> listaEmOrdemAlfabetica(){
+	public ResponseEntity<List<ListaDTOCliente>> listaEmOrdemAlfabetica(){
 		try {
-			return new ResponseEntity<List<Cliente>>(clienteServico.ListaDeClienteEmOrdemAlfabetica(),HttpStatus.OK);
+			return new ResponseEntity<List<ListaDTOCliente>>(clienteServico.ListaDeClienteEmOrdemAlfabetica(),HttpStatus.OK);
 		}
 		catch(BadGateway e) {
-			return new ResponseEntity<List<Cliente>>(HttpStatus.BAD_GATEWAY);
+			return new ResponseEntity<List<ListaDTOCliente>>(HttpStatus.BAD_GATEWAY);
 		}
 	}
 	@GetMapping("/buscarEnderecoCpf/{cpf}")
