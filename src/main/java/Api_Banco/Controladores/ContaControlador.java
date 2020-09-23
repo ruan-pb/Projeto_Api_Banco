@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpServerErrorException.BadGateway;
 
 import Api_Banco.DTOS.ContaDepositoDTO;
 import Api_Banco.DTOS.ContaSaqueDTO;
 import Api_Banco.DTOS.InputCriarConta;
+import Api_Banco.DTOS.ListaDTO;
 import Api_Banco.Entidades.Conta;
 import Api_Banco.Exceptions.ContaInexistente;
 import Api_Banco.Exceptions.ContaInvalida;
@@ -82,8 +84,8 @@ public class ContaControlador {
 	}
 
 	@GetMapping("/lista")
-	public ResponseEntity<List<Conta>> lista() {
-		return new ResponseEntity<List<Conta>>(contaServico.listaDeContas(), HttpStatus.OK);
+	public ResponseEntity<List<ListaDTO>> lista() {
+		return new ResponseEntity<List<ListaDTO>>(contaServico.listaDeContas(), HttpStatus.OK);
 
 	}
 	@GetMapping("/listacontasmenores/{valor}")
@@ -96,5 +98,15 @@ public class ContaControlador {
 			
 		}
 		
+	}
+	@GetMapping("hankindDeSaldo")
+	
+	public ResponseEntity<List<ListaDTO>> hankingDeSaldo(){
+		try {
+			return new ResponseEntity<List<ListaDTO>>(contaServico.HankindDeSaldos(),HttpStatus.OK);
+		}
+		catch(BadGateway e) {
+			return new ResponseEntity<List<ListaDTO>>(HttpStatus.BAD_GATEWAY);
+		}
 	}
 }

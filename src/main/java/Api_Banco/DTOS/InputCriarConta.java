@@ -3,30 +3,35 @@ package Api_Banco.DTOS;
 import Api_Banco.Entidades.Conta;
 
 public class InputCriarConta { 
+	private String conta;
 	private String agencia;
 	private String senha;
 	private double saldoInicial;
 	private String cpf;
 	private String nome;
+	/*
 	private String telefone;
 	private String rua;
 	private String bairro;
 	private String cidade;
 	private String estado;
-	
+	*/
 	public InputCriarConta(Conta conta) {
+		String camuflagem = conta.getSenha().replace(conta.getSenha(), "*****");
+		this.conta = conta.getConta();
 		this.agencia = conta.getAgencia();
-		this.senha = conta.getSenha();
+		this.senha = camuflagem;
 		this.saldoInicial = conta.getSaldo();
 		this.cpf = conta.getCliente().getCpf();
 		this.nome = conta.getCliente().getNome();
+		/*
 		this.telefone = conta.getCliente().getTelefone();
 		
 		this.rua = conta.getCliente().getEndereco().getRua();
 		this.bairro = conta.getCliente().getEndereco().getBairro();
 		this.cidade = conta.getCliente().getEndereco().getCidade();
 		this.estado = conta.getCliente().getEndereco().getEstado();
-		
+		*/
 	}
 	public InputCriarConta() {}
 
@@ -47,6 +52,7 @@ public class InputCriarConta {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
+	
 
 	public String getCpf() {
 		return cpf;
@@ -63,7 +69,8 @@ public class InputCriarConta {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-
+	
+/*
 	public String getTelefone() {
 		return telefone;
 	}
@@ -71,14 +78,21 @@ public class InputCriarConta {
 	public void setTelefone(String telefone) {
 		this.telefone = telefone;
 	}
-	
+	*/
 
+	public String getConta() {
+		return conta;
+	}
+	public void setConta(String conta) {
+		this.conta = conta;
+	}
 	public double getSaldoInicial() {
 		return saldoInicial;
 	}
 	public void setSaldoInicial(double saldoInicial) {
 		this.saldoInicial = saldoInicial;
 	}
+	/*
 	public String getRua() {
 		return rua;
 	}
@@ -110,7 +124,7 @@ public class InputCriarConta {
 	public void setEstado(String estado) {
 		this.estado = estado;
 	}
-	
+	*/
 	
 	
 

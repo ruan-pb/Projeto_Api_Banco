@@ -3,7 +3,6 @@ package Api_Banco.Servicos;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import Api_Banco.DTOS.ContaDepositoDTO;
 import Api_Banco.DTOS.ContaSaqueDTO;
 import Api_Banco.DTOS.InputCriarConta;
+import Api_Banco.DTOS.ListaDTO;
 import Api_Banco.Entidades.Conta;
 import Api_Banco.Exceptions.ContaInexistente;
 import Api_Banco.Exceptions.ContaInvalida;
@@ -69,6 +69,7 @@ public class ContaServico {
 		if (existiConta == true) {
 			throw new ContaJaExisti();
 		}
+		//conta.getCliente().setNome(conta.getCliente().getNome().toLowerCase());
 		contaBD.save(conta);
 		return new InputCriarConta(conta);
 
@@ -155,21 +156,20 @@ public class ContaServico {
 
 	}
 
-	public List<Conta> listaDeContas() {
-		return contaBD.findAll();
+	public List<ListaDTO> listaDeContas() {
+		List<Conta> lista = contaBD.findAll();
+		List<ListaDTO> listaDto = lista.stream().map(x -> new ListaDTO(x)).collect(Collectors.toList());
+		return listaDto;
 	}
 	
 	public List<Conta> listaDeContaDeSaldoMenor(double valor){
 		return contaBD.findAll().stream().filter(x -> x.getSaldo() <valor).collect(Collectors.toList());
-		/*
-		List<Conta> conta = new ArrayList<Conta>();
-		for(Conta c:contaBD.findAll()) {
-			if(c.getSaldo()<valor) {
-				conta.add(c);
-			}
-			
-		}
-		*/
+	
+	}
+	public List<ListaDTO> HankindDeSaldos(){
+		List<Conta> lista = contaBD.findByOrderBySaldoDesc();
+		List<ListaDTO> listaDto = lista.stream().map(x -> new ListaDTO(x)).collect(Collectors.toList());
+		return listaDto;
 	}
 
 }
