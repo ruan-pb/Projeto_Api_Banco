@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import Api_Banco.DTOS.ContaDepositoDTO;
 import Api_Banco.DTOS.ContaSaqueDTO;
 import Api_Banco.DTOS.InputCriarConta;
+import Api_Banco.DTOS.InputTranferencia;
 import Api_Banco.DTOS.ListaDTO;
+import Api_Banco.DTOS.TranferenciaDTO;
 import Api_Banco.Entidades.Conta;
 import Api_Banco.Exceptions.ContaInexistente;
 import Api_Banco.Exceptions.ContaInvalida;
@@ -35,6 +38,8 @@ public class ContaServico {
 
 	@Autowired
 	private JWTServico jwtServico;
+	
+	private ModelMapper modelMapper;
 
 	public ContaServico() {
 	}
@@ -171,5 +176,46 @@ public class ContaServico {
 		List<ListaDTO> listaDto = lista.stream().map(x -> new ListaDTO(x)).collect(Collectors.toList());
 		return listaDto;
 	}
+
+	public TranferenciaDTO tranferir(InputTranferencia tranferencia) {
+		
+		Optional<Conta> ContaOrigem = contaBD.findByConta(tranferencia.getContaOrigem());
+		Optional<Conta> ContaDestino = contaBD.findByConta(tranferencia.getContaDestino());
+		
+		System.out.println("conta origem "+ContaOrigem.get().getConta());
+		
+		System.out.println("conta destino "+ContaDestino.get().getConta());
+		
+	
+		
+		
+		if(ContaOrigem.isPresent() && ContaDestino.isPresent()) {
+			if(ContaOrigem.get().getSenha().equals(tranferencia.getSenha())) {
+				
+				double valorDeTranferencia = tranferencia.getValor();
+				
+				ContaOrigem.get().debitar(tranferencia.getValor());
+				ContaDestino.get().creditar(valorDeTranferencia);
+				
+				contaBD.save(ContaOrigem.get());
+				contaBD.save(ContaDestino.get());
+				
+			}
+			else {
+				throw new ContaInvalida();
+			}
+				
+		}
+		else{
+			throw new ContaInexistente();
+			
+		}
+		return new TranferenciaDTO(ContaDestino.get());
+		
+	}
+	public Conta toEntity(InputTranferencia tranferencia) {
+		return modelMapper.map(tranferencia, Conta.class);
+	}
+	
 
 }

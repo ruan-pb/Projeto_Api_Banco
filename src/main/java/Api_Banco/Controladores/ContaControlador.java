@@ -1,8 +1,10 @@
 package Api_Banco.Controladores;
 
 import java.util.List;
+
 import java.util.NoSuchElementException;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpServerErrorException.BadGateway;
 
+
 import Api_Banco.DTOS.ContaDepositoDTO;
 import Api_Banco.DTOS.ContaSaqueDTO;
 import Api_Banco.DTOS.InputCriarConta;
+import Api_Banco.DTOS.InputTranferencia;
 import Api_Banco.DTOS.ListaDTO;
+import Api_Banco.DTOS.TranferenciaDTO;
 import Api_Banco.Entidades.Conta;
 import Api_Banco.Exceptions.ContaInexistente;
 import Api_Banco.Exceptions.ContaInvalida;
@@ -33,6 +38,8 @@ public class ContaControlador {
 
 	@Autowired
 	private ContaServico contaServico;
+	
+	private ModelMapper modelMapper;
 
 	@PostMapping("/criarConta")
 	public ResponseEntity<InputCriarConta> abrirConta(@RequestBody Conta conta) {
@@ -109,4 +116,24 @@ public class ContaControlador {
 			return new ResponseEntity<List<ListaDTO>>(HttpStatus.BAD_GATEWAY);
 		}
 	}
+	
+	public Conta toEntity(InputTranferencia tranferencia) {
+		return modelMapper.map(tranferencia, Conta.class);
+	}
+	
+	@PutMapping("/transferencia")
+	public ResponseEntity<TranferenciaDTO> tranferencia(@RequestBody InputTranferencia tranferencia){
+
+	
+		try {
+			return new ResponseEntity<TranferenciaDTO>(contaServico.tranferir(tranferencia),HttpStatus.OK);
+		}
+		catch(ContaInexistente e) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		catch(ContaInvalida e) {
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		}
+	}
+	
 }
