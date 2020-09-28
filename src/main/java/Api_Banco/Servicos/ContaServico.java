@@ -38,7 +38,7 @@ public class ContaServico {
 
 	@Autowired
 	private JWTServico jwtServico;
-	
+
 	private ModelMapper modelMapper;
 
 	public ContaServico() {
@@ -74,7 +74,7 @@ public class ContaServico {
 		if (existiConta == true) {
 			throw new ContaJaExisti();
 		}
-		//conta.getCliente().setNome(conta.getCliente().getNome().toLowerCase());
+		// conta.getCliente().setNome(conta.getCliente().getNome().toLowerCase());
 		contaBD.save(conta);
 		return new InputCriarConta(conta);
 
@@ -93,12 +93,12 @@ public class ContaServico {
 		for (Conta conta : this.contaBD.findAll()) {
 
 			if (conta.getCliente().getCpf().equals(cpf)) {
-				
+
 				existi = true;
-				System.out.println("CPF do Banco"+conta.getCliente().getCpf());
-				System.out.println("CPF do parametro "+cpf);
+				System.out.println("CPF do Banco" + conta.getCliente().getCpf());
+				System.out.println("CPF do parametro " + cpf);
 			} else {
-				existi =  false;
+				existi = false;
 			}
 		}
 		return existi;
@@ -127,7 +127,7 @@ public class ContaServico {
 		Conta conta03 = validarConta(optRecupera);
 
 		if (conta03.getSaldo() >= conta.getSaldo()) {// conta03.getSaldo() >= conta.getSaldo()
-			
+
 			conta03.debitar(conta.getSaldo());
 		} else {
 			throw new SaldoInsuficiente();
@@ -166,59 +166,62 @@ public class ContaServico {
 		List<ListaDTO> listaDto = lista.stream().map(x -> new ListaDTO(x)).collect(Collectors.toList());
 		return listaDto;
 	}
-	
-	public List<Conta> listaDeContaDeSaldoMenor(double valor){
-		return contaBD.findAll().stream().filter(x -> x.getSaldo() <valor).collect(Collectors.toList());
-	
+
+	public List<Conta> listaDeContaDeSaldoMenor(double valor) {
+		return contaBD.findAll().stream().filter(x -> x.getSaldo() < valor).collect(Collectors.toList());
+
 	}
-	public List<ListaDTO> HankindDeSaldos(){
+
+	public List<ListaDTO> HankindDeSaldos() {
 		List<Conta> lista = contaBD.findByOrderBySaldoDesc();
 		List<ListaDTO> listaDto = lista.stream().map(x -> new ListaDTO(x)).collect(Collectors.toList());
 		return listaDto;
 	}
 
-	public TranferenciaDTO tranferir(InputTranferencia tranferencia) {
-		
-		Optional<Conta> ContaOrigem = contaBD.findByConta(tranferencia.getContaOrigem());
-		Optional<Conta> ContaDestino = contaBD.findByConta(tranferencia.getContaDestino());
-		
-		System.out.println("conta origem "+ContaOrigem.get().getConta());
-		
-		System.out.println("conta destino "+ContaDestino.get().getConta());
-		
-	
-		
-		
-		if(ContaOrigem.isPresent() && ContaDestino.isPresent()) {
-			if(ContaOrigem.get().getSenha().equals(tranferencia.getSenha())) {
-				
-				double valorDeTranferencia = tranferencia.getValor();
-				System.out.println(valorDeTranferencia);
-				ContaOrigem.get().debitar(tranferencia.getValor());
-				System.out.println("conta origem "+ContaOrigem.get().getSaldo());
-				ContaDestino.get().creditar(valorDeTranferencia);
-				System.out.println("conta destino "+ContaDestino.get().getSaldo());
+	public TranferenciaDTO tranferir(InputTranferencia transferencia) {
 
+		Optional<Conta> ContaOrigem = contaBD.findByConta(transferencia.getContaOrigem());
+		Optional<Conta> ContaDestino = contaBD.findByConta(transferencia.getContaDestino());
+		
+
+		System.out.println("conta origem " + ContaOrigem.get().getConta());
+
+		System.out.println("conta destino " + ContaDestino.get().getConta());
+
+		if (ContaOrigem.isPresent() && ContaDestino.isPresent()) {
+			if (ContaOrigem.get().getSenha().equals(transferencia.getSenha())) {
+				if (ContaOrigem.get().getSaldo() >= transferencia.getValor()) {
+
+					double valorDeTranferencia = transferencia.getValor();
+					System.out.println(valorDeTranferencia);
+					ContaOrigem.get().debitar(transferencia.getValor());
+					System.out.println("conta origem " + ContaOrigem.get().getSaldo());
+					ContaDestino.get().creditar(valorDeTranferencia);
+					System.out.println("conta destino " + ContaDestino.get().getSaldo());
+
+					contaBD.save(ContaOrigem.get());
+					contaBD.save(ContaDestino.get());
+
+				}
+				else {
+					throw new SaldoInsuficiente();
+				}
 				
-				contaBD.save(ContaOrigem.get());
-				contaBD.save(ContaDestino.get());
-				
-			}
+			} 
 			else {
 				throw new ContaInvalida();
 			}
-				
-		}
-		else{
+
+		} else {
 			throw new ContaInexistente();
-			
+
 		}
-		return new TranferenciaDTO(tranferencia);
-		
+		return new TranferenciaDTO(transferencia);
+
 	}
+
 	public Conta toEntity(InputTranferencia tranferencia) {
 		return modelMapper.map(tranferencia, Conta.class);
 	}
-	
 
 }

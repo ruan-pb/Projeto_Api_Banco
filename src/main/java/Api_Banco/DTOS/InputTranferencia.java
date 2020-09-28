@@ -1,10 +1,10 @@
 package Api_Banco.DTOS;
 
-import Api_Banco.Entidades.Cliente;
+
 
 public class InputTranferencia {
 	
-	//private Cliente cliente;
+
 	private String contaOrigem;
 	private String senha;
 	private double valor;
@@ -42,14 +42,7 @@ public class InputTranferencia {
 	public void setCpfDestinatario(String cpfDestinatario) {
 		this.cpfDestinatario = cpfDestinatario;
 	}
-	/*
-	public Cliente getCliente() {
-		return cliente;
-	}
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-	*/
+	
 	
 	
 		

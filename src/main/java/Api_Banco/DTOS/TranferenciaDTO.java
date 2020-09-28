@@ -1,6 +1,6 @@
 package Api_Banco.DTOS;
 
-import Api_Banco.Entidades.Conta;
+
 
 public class TranferenciaDTO {
 	
@@ -31,6 +31,7 @@ public class TranferenciaDTO {
 		this.contaDestino = conta.getContaDestino();
 		//this.cpfDestinatario = conta.getCliente().getCpf();
 		this.valorDestinado = conta.getValor();
+		
 	}
 
 
@@ -63,12 +64,15 @@ public class TranferenciaDTO {
 		this.cpfDestinatario = cpfDestinatario;
 	}
 	*/
-	public double getSaldoDoDestinatario() {
+
+	public double getValorDestinado() {
 		return valorDestinado;
 	}
-	public void setSaldoDoDestinatario(double saldoDoDestinatario) {
-		this.valorDestinado = saldoDoDestinatario;
+
+	public void setValorDestinado(double valorDestinado) {
+		this.valorDestinado = valorDestinado;
 	}
+	
 	
 	
 

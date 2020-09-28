@@ -134,6 +134,9 @@ public class ContaControlador {
 		catch(ContaInvalida e) {
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
+		catch(SaldoInsuficiente e) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
 	}
 	
 }
