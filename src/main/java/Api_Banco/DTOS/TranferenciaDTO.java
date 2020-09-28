@@ -5,10 +5,10 @@ import Api_Banco.Entidades.Conta;
 public class TranferenciaDTO {
 	
 	private String contaOrigem;
-	private String cpfOrigem;
+	//private String cpfOrigem;
 	private String contaDestino;
-	private String cpfDestinatario;
-	private double saldoDoDestinatario;
+	//private String cpfDestinatario;
+	private double valorDestinado;
 	
 	public TranferenciaDTO() {}
 	
@@ -30,7 +30,7 @@ public class TranferenciaDTO {
 		//this.cpfOrigem = conta.getCliente().getCpf();
 		this.contaDestino = conta.getContaDestino();
 		//this.cpfDestinatario = conta.getCliente().getCpf();
-		this.saldoDoDestinatario = conta.getValor();
+		this.valorDestinado = conta.getValor();
 	}
 
 
@@ -41,29 +41,33 @@ public class TranferenciaDTO {
 	public void setContaOrigem(String contaOrigem) {
 		this.contaOrigem = contaOrigem;
 	}
+	/*
 	public String getCpfOrigem() {
 		return cpfOrigem;
 	}
 	public void setCpfOrigem(String cpfOrigem) {
 		this.cpfOrigem = cpfOrigem;
 	}
+	*/
 	public String getContaDestino() {
 		return contaDestino;
 	}
 	public void setContaDestino(String contaDestino) {
 		this.contaDestino = contaDestino;
 	}
+	/*
 	public String getCpfDestinatario() {
 		return cpfDestinatario;
 	}
 	public void setCpfDestinatario(String cpfDestinatario) {
 		this.cpfDestinatario = cpfDestinatario;
 	}
+	*/
 	public double getSaldoDoDestinatario() {
-		return saldoDoDestinatario;
+		return valorDestinado;
 	}
 	public void setSaldoDoDestinatario(double saldoDoDestinatario) {
-		this.saldoDoDestinatario = saldoDoDestinatario;
+		this.valorDestinado = saldoDoDestinatario;
 	}
 	
 	
