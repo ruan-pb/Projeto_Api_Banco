@@ -12,7 +12,7 @@ public class TranferenciaDTO {
 	
 	public TranferenciaDTO() {}
 	
-	
+	/*
 	
 	public TranferenciaDTO(Conta conta) {
 		super();
@@ -21,6 +21,16 @@ public class TranferenciaDTO {
 		this.contaDestino = conta.getConta();
 		this.cpfDestinatario = conta.getCliente().getCpf();
 		this.saldoDoDestinatario = conta.getSaldo();
+		
+	}
+	*/
+	public TranferenciaDTO(InputTranferencia conta) {
+		super();
+		this.contaOrigem = conta.getContaOrigem();
+		//this.cpfOrigem = conta.getCliente().getCpf();
+		this.contaDestino = conta.getContaDestino();
+		//this.cpfDestinatario = conta.getCliente().getCpf();
+		this.saldoDoDestinatario = conta.getValor();
 	}
 
 

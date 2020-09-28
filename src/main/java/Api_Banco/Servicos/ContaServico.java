@@ -193,9 +193,12 @@ public class ContaServico {
 			if(ContaOrigem.get().getSenha().equals(tranferencia.getSenha())) {
 				
 				double valorDeTranferencia = tranferencia.getValor();
-				
+				System.out.println(valorDeTranferencia);
 				ContaOrigem.get().debitar(tranferencia.getValor());
+				System.out.println("conta origem "+ContaOrigem.get().getSaldo());
 				ContaDestino.get().creditar(valorDeTranferencia);
+				System.out.println("conta destino "+ContaDestino.get().getSaldo());
+
 				
 				contaBD.save(ContaOrigem.get());
 				contaBD.save(ContaDestino.get());
@@ -210,7 +213,7 @@ public class ContaServico {
 			throw new ContaInexistente();
 			
 		}
-		return new TranferenciaDTO(ContaDestino.get());
+		return new TranferenciaDTO(tranferencia);
 		
 	}
 	public Conta toEntity(InputTranferencia tranferencia) {
