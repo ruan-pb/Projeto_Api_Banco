@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import Api_Banco.DTOS.ContaDepositoDTO;
 import Api_Banco.DTOS.ContaSaqueDTO;
 import Api_Banco.DTOS.InputCriarConta;
+import Api_Banco.DTOS.InputDeposito;
 import Api_Banco.DTOS.InputTranferencia;
 import Api_Banco.DTOS.ListaDTO;
 import Api_Banco.DTOS.TranferenciaDTO;
@@ -105,12 +106,12 @@ public class ContaServico {
 
 	}
 
-	public ContaDepositoDTO depositar(Conta conta) {
+	public ContaDepositoDTO depositar(InputDeposito conta) {
 		Optional<Conta> conta01 = contaBD.findByConta(conta.getConta());
 		Conta conta02 = conta01.get();
 
 		if (conta.getAgencia().equals(conta02.getAgencia()) && conta.getConta().equals(conta02.getConta())) {
-			conta02.creditar(conta.getSaldo());
+			conta02.creditar(conta.getDeposito());
 
 		} else {
 			throw new ContaInvalida();

@@ -3,9 +3,15 @@ package Api_Banco.DTOS;
 import Api_Banco.Entidades.Conta;
 
 public class ContaDepositoDTO {
+	
 	private String agencia;
+	
 	private String conta;
-	private double saldo;
+	
+	private Double saldo;
+	
+
+	
 	
 	public ContaDepositoDTO() {}
 
@@ -14,6 +20,7 @@ public class ContaDepositoDTO {
 		this.agencia = conta.getAgencia();
 		this.conta = conta.getConta();
 		this.saldo = conta.getSaldo();
+		
 	}
 
 	public String getAgencia() {
@@ -24,6 +31,8 @@ public class ContaDepositoDTO {
 		this.agencia = agencia;
 	}
 
+	
+
 	public String getConta() {
 		return conta;
 	}
@@ -32,14 +41,14 @@ public class ContaDepositoDTO {
 		this.conta = conta;
 	}
 
-	public double getDeposito() {
+	public Double getSaldo() {
 		return saldo;
 	}
 
-	public void setDeposito(double deposito) {
-		this.saldo = deposito;
+	public void setSaldo(Double saldo) {
+		this.saldo = saldo;
 	}
-	
+
 	
 	
 	

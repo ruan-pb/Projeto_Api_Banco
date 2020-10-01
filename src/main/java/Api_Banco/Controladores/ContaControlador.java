@@ -1,7 +1,6 @@
 package Api_Banco.Controladores;
 
 import java.util.List;
-
 import java.util.NoSuchElementException;
 
 import org.modelmapper.ModelMapper;
@@ -18,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpServerErrorException.BadGateway;
 
-
 import Api_Banco.DTOS.ContaDepositoDTO;
 import Api_Banco.DTOS.ContaSaqueDTO;
 import Api_Banco.DTOS.InputCriarConta;
+import Api_Banco.DTOS.InputDeposito;
 import Api_Banco.DTOS.InputTranferencia;
 import Api_Banco.DTOS.ListaDTO;
 import Api_Banco.DTOS.TranferenciaDTO;
@@ -56,8 +55,10 @@ public class ContaControlador {
 	}
 
 	@PutMapping("/deposito")
-	public ResponseEntity<ContaDepositoDTO> depositar(@RequestBody Conta conta) {
+	public ResponseEntity<ContaDepositoDTO> depositar(@RequestBody InputDeposito conta) {
 		try {
+		
+			//Conta conta1 = toConta(conta);
 			return new ResponseEntity<ContaDepositoDTO>(contaServico.depositar(conta), HttpStatus.OK);
 		} catch (ContaInvalida e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -119,6 +120,12 @@ public class ContaControlador {
 	
 	public Conta toEntity(InputTranferencia tranferencia) {
 		return modelMapper.map(tranferencia, Conta.class);
+	}
+	public Conta toConta(InputDeposito deposito) {
+		return modelMapper.map(deposito, Conta.class);
+	}
+	public ContaDepositoDTO toContaOur(Conta conta) {
+		return modelMapper.map(conta, ContaDepositoDTO.class);
 	}
 	
 	@PutMapping("/transferencia")
