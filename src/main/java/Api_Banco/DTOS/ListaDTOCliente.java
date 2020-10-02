@@ -3,6 +3,7 @@ package Api_Banco.DTOS;
 import Api_Banco.Entidades.Cliente;
 
 public class ListaDTOCliente {
+	private String conta;
 	private String nome;
 	private String telefone;
 	private String cpf ;
@@ -13,6 +14,8 @@ public class ListaDTOCliente {
 	
 	public ListaDTOCliente(Cliente cliente) {
 		super();
+		this.conta = cliente.getConta().getConta();
+		
 		this.nome = cliente.getNome();
 		this.telefone = cliente.getTelefone();
 		this.cpf = cliente.getCpf();
@@ -45,6 +48,14 @@ public class ListaDTOCliente {
 	}
 	public void setCidade(String cidade) {
 		this.cidade = cidade;
+	}
+
+	public String getConta() {
+		return conta;
+	}
+
+	public void setConta(String conta) {
+		this.conta = conta;
 	}
 	
 	

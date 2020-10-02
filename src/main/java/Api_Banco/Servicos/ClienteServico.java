@@ -30,8 +30,8 @@ public class ClienteServico {
 		return listaDto;
 	}
 	
-	public EnderecoCpfDTO encontraEnderecoPorCpf(String cpf) {
-		Optional<Cliente> cli = clienteBD.findByCpf(cpf);
+	public EnderecoCpfDTO encontraEnderecoPorCpf(Cliente cpf) {
+		Optional<Cliente> cli = clienteBD.findByCpf(cpf.getCpf());
 		
 		if(cli.isEmpty()) {
 			throw new ContaInexistente();
@@ -40,12 +40,14 @@ public class ClienteServico {
 		
 		
 	}
-	public List<EnderecoNomeDTO> encontraEnderecoPorNome(String nome) {
-	
+	public List<EnderecoNomeDTO> encontraEnderecoPorNome(Cliente clienteNome) {
+	System.out.println(clienteNome.getNome());
 		//Optional<Cliente> cli = clienteBD.findByNome(nome.toLowerCase());
 		List<Cliente> lista = new ArrayList<>();
 		for(Cliente cliente:clienteBD.findAll()){
-			if(cliente.getNome().toLowerCase().startsWith(nome.toLowerCase())) {
+			System.out.println(clienteNome.getNome());
+			System.out.println(cliente.getNome());
+			if(cliente.getNome().toLowerCase().startsWith(clienteNome.getNome().toLowerCase())) {
 				lista.add(cliente);
 			}
 		}
