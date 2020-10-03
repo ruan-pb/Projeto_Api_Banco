@@ -1,7 +1,9 @@
 package Api_Banco.Servicos;
 
 import java.io.IOException;
+
 import java.io.InputStream;
+import java.sql.Date;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Api_Banco.DTOS.ContaDepositoDTO;
 import Api_Banco.DTOS.ContaSaqueDTO;
+import Api_Banco.DTOS.InputCartaoDeCredito;
 import Api_Banco.DTOS.InputCriarConta;
 import Api_Banco.DTOS.InputDeposito;
 import Api_Banco.DTOS.InputTranferencia;
@@ -183,7 +186,6 @@ public class ContaServico {
 
 		Optional<Conta> ContaOrigem = contaBD.findByConta(transferencia.getContaOrigem());
 		Optional<Conta> ContaDestino = contaBD.findByConta(transferencia.getContaDestino());
-		
 
 		System.out.println("conta origem " + ContaOrigem.get().getConta());
 
@@ -203,13 +205,11 @@ public class ContaServico {
 					contaBD.save(ContaOrigem.get());
 					contaBD.save(ContaDestino.get());
 
-				}
-				else {
+				} else {
 					throw new SaldoInsuficiente();
 				}
-				
-			} 
-			else {
+
+			} else {
 				throw new ContaInvalida();
 			}
 
@@ -223,6 +223,35 @@ public class ContaServico {
 
 	public Conta toEntity(InputTranferencia tranferencia) {
 		return modelMapper.map(tranferencia, Conta.class);
+	}
+
+	public Conta comprarCartaoDeCredito(InputCartaoDeCredito cartao) {
+		Optional<Conta> conta = contaBD.findByConta(cartao.getConta());
+		if (conta.isPresent()) {
+			if(conta.get().getCredito().getNumeroDoCartao().equals(cartao.getNumeroDoCartao())&&conta.get().getConta().equals(cartao.getConta())) {
+				
+				conta.get().getCredito().setFaturaAtual(cartao.getParcela().getValor());
+				
+				java.util.Date data = new java.util.Date();//data
+				java.sql.Date dataDaCompra = new java.sql.Date(data.getTime());
+				conta.get().getCredito().setDataDaCompra(dataDaCompra);
+				
+				conta.get().getCredito().passandoCartao(cartao.getParcela());
+				
+				
+				
+				
+			}
+			else {
+				throw new ContaInvalida();
+			}
+			
+
+		}
+		else {
+			throw new ContaInexistente();
+		}
+
 	}
 
 }

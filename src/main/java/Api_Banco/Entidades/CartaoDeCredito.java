@@ -11,10 +11,13 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import Api_Banco.Exceptions.SaldoInsuficiente;
+
 @Entity
 public class CartaoDeCredito {
 	@Id
 	private Integer Id;
+	private String numeroDoCartao;
 	private double LimiteDisponivel;
 	private double FaturaAtual;
 	
@@ -47,6 +50,19 @@ public class CartaoDeCredito {
 	public void setLimiteDisponivel(double limiteDisponivel) {
 		LimiteDisponivel = limiteDisponivel;
 	}
+	
+
+	public String getNumeroDoCartao() {
+		return numeroDoCartao;
+	}
+
+
+
+	public void setNumeroDoCartao(String numeroDoCartao) {
+		this.numeroDoCartao = numeroDoCartao;
+	}
+
+
 
 	public double getFaturaAtual() {
 		return FaturaAtual;
@@ -85,14 +101,21 @@ public class CartaoDeCredito {
 	}
 
 	public void passandoCartao(Parcela parcela) {
+		Parcela p = new Parcela();
 		double disponivel = this.getFaturaAtual()+parcela.getValor();
 		if(this.LimiteDisponivel > disponivel) {
+			//parcela.setDataDeVencimento();
+			/*
+			 * calcular a data de vencimento de cada parcela
+			 * e adicionar no java.sql.Date now = new java.sql.Date(data.getTime());
+			 * */
+			 
 			this.FaturaAtual += parcela.getValor();
 			ProximasFaturas.add(parcela);
 		
 		}
 		else {
-			//exceção
+			throw new SaldoInsuficiente();
 		}
 		
 	}
