@@ -19,6 +19,7 @@ import org.springframework.web.client.HttpServerErrorException.BadGateway;
 
 import Api_Banco.DTOS.ContaDepositoDTO;
 import Api_Banco.DTOS.ContaSaqueDTO;
+import Api_Banco.DTOS.InputCartaoDeCredito;
 import Api_Banco.DTOS.InputCriarConta;
 import Api_Banco.DTOS.InputDeposito;
 import Api_Banco.DTOS.InputTranferencia;
@@ -142,6 +143,23 @@ public class ContaControlador {
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
 		catch(SaldoInsuficiente e) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+	}
+	@PutMapping("/cartaoDeCredito")
+	public ResponseEntity<Conta> cartaoDeCredito(@RequestBody InputCartaoDeCredito cartao){
+		try {
+			return new ResponseEntity<Conta>(contaServico.comprarCartaoDeCredito(cartao),HttpStatus.OK);
+		}
+		catch(SaldoInsuficiente e) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			
+		}
+		catch(ContaInvalida e) {
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			
+		}
+		catch(ContaInexistente e){
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 	}

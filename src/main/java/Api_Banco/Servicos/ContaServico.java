@@ -27,6 +27,7 @@ import Api_Banco.DTOS.InputDeposito;
 import Api_Banco.DTOS.InputTranferencia;
 import Api_Banco.DTOS.ListaDTO;
 import Api_Banco.DTOS.TranferenciaDTO;
+import Api_Banco.Entidades.CartaoDeCredito;
 import Api_Banco.Entidades.Conta;
 import Api_Banco.Exceptions.ContaInexistente;
 import Api_Banco.Exceptions.ContaInvalida;
@@ -223,20 +224,34 @@ public class ContaServico {
 
 	public Conta toEntity(InputTranferencia tranferencia) {
 		return modelMapper.map(tranferencia, Conta.class);
+	
+	}
+	public CartaoDeCredito toEntity(InputCartaoDeCredito cartao) {
+		return modelMapper.map(cartao, CartaoDeCredito.class);
+	
 	}
 
 	public Conta comprarCartaoDeCredito(InputCartaoDeCredito cartao) {
 		Optional<Conta> conta = contaBD.findByConta(cartao.getConta());
+		System.out.println(conta.get().getConta());
 		if (conta.isPresent()) {
-			if(conta.get().getCredito().getNumeroDoCartao().equals(cartao.getNumeroDoCartao())&&conta.get().getConta().equals(cartao.getConta())) {
+			if(conta.get().getConta().equals(cartao.getConta())) {
 				
 				conta.get().getCredito().setFaturaAtual(cartao.getParcela().getValor());
 				
 				java.util.Date data = new java.util.Date();//data
 				java.sql.Date dataDaCompra = new java.sql.Date(data.getTime());
 				conta.get().getCredito().setDataDaCompra(dataDaCompra);
+				conta.get().getCredito().getConta().setConta(cartao.getConta());
+				conta.get().getCredito().getConta().setAgencia(cartao.getAgencia());
 				
 				conta.get().getCredito().passandoCartao(cartao.getParcela());
+				CartaoDeCredito cart = toEntity(cartao);
+				conta.get().setCredito(cart);
+				
+				
+				
+				
 				
 				
 				
@@ -251,7 +266,9 @@ public class ContaServico {
 		else {
 			throw new ContaInexistente();
 		}
+		return conta.get();
 
 	}
+	
 
 }
