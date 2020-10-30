@@ -29,6 +29,7 @@ import Api_Banco.DTOS.ListaDTO;
 import Api_Banco.DTOS.TranferenciaDTO;
 import Api_Banco.Entidades.CartaoDeCredito;
 import Api_Banco.Entidades.Conta;
+import Api_Banco.Entidades.Parcela;
 import Api_Banco.Exceptions.ContaInexistente;
 import Api_Banco.Exceptions.ContaInvalida;
 import Api_Banco.Exceptions.ContaJaExisti;
@@ -233,29 +234,39 @@ public class ContaServico {
 
 	public Conta comprarCartaoDeCredito(InputCartaoDeCredito cartao) {
 		Optional<Conta> conta = contaBD.findByConta(cartao.getConta());
-		System.out.println(conta.get().getConta());
 		if (conta.isPresent()) {
 			if(conta.get().getConta().equals(cartao.getConta())) {
 				
-				conta.get().getCredito().setFaturaAtual(cartao.getParcela().getValor());
+				System.out.println(cartao.getConta());
+				System.out.println(cartao.getParcelas());
+				System.out.println(cartao.getValor());
+
+				CartaoDeCredito cartaoDeCredito = new CartaoDeCredito();
+				
+				cartaoDeCredito.setFaturaAtual(cartao.getValor());
+				cartaoDeCredito.setLimiteDisponivel(cartao.getValor());
+				
+				conta.get().setCredito(cartaoDeCredito);
+				
+				/*
+				conta.get().getCredito().setNumeroDoCartao("15881");
+				conta.get().getCredito().setFaturaAtual(cartao.getValor());
+				*/
 				
 				java.util.Date data = new java.util.Date();//data
 				java.sql.Date dataDaCompra = new java.sql.Date(data.getTime());
+				conta.get().getCredito().setFaturaAtual(cartaoDeCredito.getFaturaAtual());
+				conta.get().getCredito().setLimiteDisponivel(cartaoDeCredito.getLimiteDisponivel());
 				conta.get().getCredito().setDataDaCompra(dataDaCompra);
+				/*
 				conta.get().getCredito().getConta().setConta(cartao.getConta());
 				conta.get().getCredito().getConta().setAgencia(cartao.getAgencia());
-				
-				conta.get().getCredito().passandoCartao(cartao.getParcela());
+				*/
+				Parcela p = new Parcela(cartao.getParcelas(), dataDaCompra, cartao.getValor());
+				conta.get().getCredito().passandoCartao(p);
 				CartaoDeCredito cart = toEntity(cartao);
 				conta.get().setCredito(cart);
-				
-				
-				
-				
-				
-				
-				
-				
+		
 			}
 			else {
 				throw new ContaInvalida();

@@ -35,11 +35,14 @@ public class Parcela {
 	
 	
 
-	public Parcela(int quantidadeDeParcelas, Date dataDeVencimento, double valor) {
-		super();
+	public Parcela(int quantidadeDeParcelas, Date dataDeVencimento, double valordaParcela) {
 		QuantidadeDeParcelas = quantidadeDeParcelas;
 		DataDeVencimento = dataDeVencimento;
-		this.valor = valor;
+		valor = valordaParcela;
+	}
+	public Parcela(int quantidadeDeParcelas, double valordaParcela) {
+		QuantidadeDeParcelas = quantidadeDeParcelas;
+		valor = valordaParcela;
 	}
 
 
@@ -64,8 +67,8 @@ public class Parcela {
 		return valor;
 	}
 
-	public void setValor(double valor) {
-		this.valor = valor;
+	public void setValor(double valorr) {
+		valor = valorr;
 	}
 	/*
 	public Date adicionarMes(Date data,int mes) {

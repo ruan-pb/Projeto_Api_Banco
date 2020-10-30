@@ -5,6 +5,7 @@ import java.util.Calendar;
 //import java.text.ParseException;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
@@ -28,7 +29,7 @@ public class CartaoDeCredito {
 	@OneToMany(mappedBy = "credito")
 	private List<Parcela> ProximasFaturas;
 
-	@OneToOne(mappedBy = "credito")
+	@OneToOne(mappedBy = "credito", cascade = CascadeType.ALL)
 	private Conta conta;
 
 	public CartaoDeCredito() {
@@ -63,7 +64,7 @@ public class CartaoDeCredito {
 	}
 
 	public void setFaturaAtual(double faturaAtual) {
-		FaturaAtual += faturaAtual;
+		this.FaturaAtual = faturaAtual;
 	}
 
 	public Date getDataDaCompra() {
@@ -119,13 +120,13 @@ public class CartaoDeCredito {
 
 	}
 
-	public java.sql.Date adicionarMes(int mes) {
+	public Date adicionarMes(int mes) {
 		java.util.Date agora = new java.util.Date();
 		java.sql.Date data = new java.sql.Date(agora.getTime());
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(data);
 		cal.add(Calendar.MONTH, mes);
-		return (Date) cal.getTime();
+		return (Date)cal.getTime();
 
 	}
 

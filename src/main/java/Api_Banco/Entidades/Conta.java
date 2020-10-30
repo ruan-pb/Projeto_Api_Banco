@@ -47,7 +47,7 @@ public class Conta {
 	@JoinColumn(name="conta_poupanca")
 	private Poupanca poupanca;
 	
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="conta_credito")
 	private CartaoDeCredito credito;
 	
@@ -109,8 +109,12 @@ public class Conta {
 	public void setPoupanca(Poupanca poupanca) {
 		this.poupanca = poupanca;
 	}
-
 	
+	
+
+
+
+
 	public CartaoDeCredito getCredito() {
 		return credito;
 	}
@@ -118,7 +122,6 @@ public class Conta {
 	public void setCredito(CartaoDeCredito credito) {
 		this.credito = credito;
 	}
-
 
 	@Override
 	public int hashCode() {
