@@ -5,6 +5,8 @@ import java.sql.Date;
 //import java.util.Calendar;
 //import java.util.Date;
 //import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -37,7 +39,6 @@ public class Parcela {
 
 	public Parcela(int quantidadeDeParcelas, Date dataDeVencimento, double valordaParcela) {
 		QuantidadeDeParcelas = quantidadeDeParcelas;
-		DataDeVencimento = dataDeVencimento;
 		valor = valordaParcela;
 	}
 	public Parcela(int quantidadeDeParcelas, double valordaParcela) {
@@ -62,7 +63,14 @@ public class Parcela {
 	public void setDataDeVencimento(Date dataDeVencimento) {
 		DataDeVencimento = dataDeVencimento;
 	}
-
+/*
+	public void adicionarParcela(Date data) {
+		this.DataDeVencimento.add(data);
+	}
+	public void RemoverParcela(Date data) {
+		this.DataDeVencimento.add(data);
+	}
+	*/
 	public double getValor() {
 		return valor;
 	}

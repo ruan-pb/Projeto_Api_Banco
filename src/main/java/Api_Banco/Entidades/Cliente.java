@@ -3,6 +3,7 @@ package Api_Banco.Entidades;
 import java.sql.Date;
 
 
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -1,6 +1,12 @@
 package Api_Banco.Entidades;
 
 import java.sql.Date;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 //import java.text.ParseException;
 import java.util.List;
@@ -27,7 +33,7 @@ public class CartaoDeCredito {
 	private Date DataDaCompra;
 
 	@OneToMany(mappedBy = "credito")
-	private List<Parcela> ProximasFaturas;
+	private List<Parcela> ProximasFaturas  =  new ArrayList<>();
 
 	@OneToOne(mappedBy = "credito", cascade = CascadeType.ALL)
 	private Conta conta;
@@ -104,15 +110,36 @@ public class CartaoDeCredito {
 		double limite = 1000;
 		if (disponivel < limite) {
 
+			
 			for (int k = 1; k < parcela.getQuantidadeDeParcelas(); k++) {
-				Date data = adicionarMes(k);
+				
+	          //Date dataDaCompra = Date.valueOf(LocalDate.now());
+				
+				//Date dataDaCompta = Date.valueOf()
+				
+				
+				Date parcelas = Date.valueOf(LocalDate.now().plusMonths(k));
 				p.setQuantidadeDeParcelas(k);
-				p.setDataDeVencimento(data);
+				p.setDataDeVencimento(parcelas);
 				p.setValor(parcelaBasica);
-
+				
+				System.out.println(p.getQuantidadeDeParcelas());
+				System.out.println(p.getDataDeVencimento());
+				System.out.println(p.getValor());
+				
+				ProximasFaturas.add(p);
+				
+				/*
+				java.util.Date data = adicionarMes(k);
+				p.setQuantidadeDeParcelas(k);
+			
+				p.setDataDeVencimento(data.getTime());
+				p.setValor(parcelaBasica);
+*/
 			}
+			
 
-			ProximasFaturas.add(p);
+			
 
 		} else {
 			throw new SaldoInsuficiente();
@@ -120,13 +147,13 @@ public class CartaoDeCredito {
 
 	}
 
-	public Date adicionarMes(int mes) {
-		java.util.Date agora = new java.util.Date();
-		java.sql.Date data = new java.sql.Date(agora.getTime());
+	public java.util.Date adicionarMes(int mes) {
+		Instant inst = Instant.now();
+		Timestamp data =  java.sql.Timestamp.from(inst);
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(data);
 		cal.add(Calendar.MONTH, mes);
-		return (Date)cal.getTime();
+		return cal.getTime();
 
 	}
 

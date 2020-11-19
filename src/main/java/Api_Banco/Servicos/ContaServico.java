@@ -227,10 +227,7 @@ public class ContaServico {
 		return modelMapper.map(tranferencia, Conta.class);
 	
 	}
-	public CartaoDeCredito toEntity(InputCartaoDeCredito cartao) {
-		return modelMapper.map(cartao, CartaoDeCredito.class);
 	
-	}
 
 	public Conta comprarCartaoDeCredito(InputCartaoDeCredito cartao) {
 		Optional<Conta> conta = contaBD.findByConta(cartao.getConta());
@@ -251,22 +248,28 @@ public class ContaServico {
 				/*
 				conta.get().getCredito().setNumeroDoCartao("15881");
 				conta.get().getCredito().setFaturaAtual(cartao.getValor());
-				*/
+				
 				
 				java.util.Date data = new java.util.Date();//data
 				java.sql.Date dataDaCompra = new java.sql.Date(data.getTime());
+				*/
 				conta.get().getCredito().setFaturaAtual(cartaoDeCredito.getFaturaAtual());
 				conta.get().getCredito().setLimiteDisponivel(cartaoDeCredito.getLimiteDisponivel());
-				conta.get().getCredito().setDataDaCompra(dataDaCompra);
+				//conta.get().getCredito().setDataDaCompra(dataDaCompra);
 				/*
 				conta.get().getCredito().getConta().setConta(cartao.getConta());
 				conta.get().getCredito().getConta().setAgencia(cartao.getAgencia());
 				*/
-				Parcela p = new Parcela(cartao.getParcelas(), dataDaCompra, cartao.getValor());
+				System.out.println(cartao.getConta());
+				System.out.println(cartao.getParcelas());
+				Parcela p = new Parcela(cartao.getParcelas(),cartao.getValor());
 				conta.get().getCredito().passandoCartao(p);
+				
+				
+				/*
 				CartaoDeCredito cart = toEntity(cartao);
 				conta.get().setCredito(cart);
-		
+		*/
 			}
 			else {
 				throw new ContaInvalida();
@@ -279,6 +282,10 @@ public class ContaServico {
 		}
 		return conta.get();
 
+	}
+	public CartaoDeCredito toEntity(InputCartaoDeCredito cartao) {
+		return modelMapper.map(cartao, CartaoDeCredito.class);
+	
 	}
 	
 
