@@ -5,8 +5,8 @@ import Api_Banco.Entidades.Conta;
 public class ContaSaqueDTO {
 	private String agencia;
 	private String conta;
-	private double creditado;
 	private double saldo;
+	private double valor;
 	
 	
 	public ContaSaqueDTO(Conta conta) {
@@ -29,20 +29,19 @@ public class ContaSaqueDTO {
 	public void setConta(String conta) {
 		this.conta = conta;
 	}
-	
-	public double getCreditar() {
-		return creditado;
-	}
-	public void setCreditar(double creditar) {
-		this.creditado = creditar;
-	}
-	
 	public double getSaldo() {
 		return saldo;
 	}
 	public void setSaldo(double saldo) {
 		this.saldo = saldo;
 	}
+	public double getValor() {
+		return valor;
+	}
+	public void setValor(double valor) {
+		this.valor = valor;
+	}
+	
 	
 	
 	

@@ -113,24 +113,7 @@ public class Emprestimo {
 		double valorBasicoDaParcela =this.getValor()/this.getQuantidadeDeParcelas();
 		double valorTotal = 0;
 		
-		/*
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		
-
-		String agora = "25/03/2020";
-		
-		java.util.Date aqui = sdf.parse(agora);
-
-		
-		java.sql.Date now = new java.sql.Date(aqui.getTime());
-		
-		*/
-		
-		
-				
-		
-		
-		
+	
 		for(int k=1;k<=this.getQuantidadeDeParcelas();k++) {
 			Date data = adicionarMes(this.DataDeVencimento,k);
 			valorTotal += valorBasicoDaParcela * this.getJuros();

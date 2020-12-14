@@ -1,26 +1,30 @@
 package Api_Banco.Entidades;
 
 import java.sql.Date;
-//import java.text.ParseException;
-//import java.util.Calendar;
-//import java.util.Date;
-//import java.util.List;
-import java.util.ArrayList;
-import java.util.List;
 
+import javax.annotation.Generated;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-//import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Columns;
+
+
 
 @Entity
 public class Parcela {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
 	private int QuantidadeDeParcelas;
+	
+	@Column(name = "ultima_parcela")
 	private Date DataDeVencimento;
 	private double valor;
 	
@@ -31,6 +35,8 @@ public class Parcela {
 	@ManyToOne
 	@JoinColumn(name="parcela_credito")
 	private CartaoDeCredito credito;
+	
+	
 
 	
 	public Parcela() {}
@@ -63,14 +69,7 @@ public class Parcela {
 	public void setDataDeVencimento(Date dataDeVencimento) {
 		DataDeVencimento = dataDeVencimento;
 	}
-/*
-	public void adicionarParcela(Date data) {
-		this.DataDeVencimento.add(data);
-	}
-	public void RemoverParcela(Date data) {
-		this.DataDeVencimento.add(data);
-	}
-	*/
+
 	public double getValor() {
 		return valor;
 	}
@@ -78,41 +77,18 @@ public class Parcela {
 	public void setValor(double valorr) {
 		valor = valorr;
 	}
-	/*
-	public Date adicionarMes(Date data,int mes) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(data);
-		cal.add(Calendar.MONTH, mes);
-		return (Date) cal.getTime();
+
+
+
+	@Override
+	public String toString() {
+		return "Parcela [id=" + id + ", QuantidadeDeParcelas=" + QuantidadeDeParcelas + ", DataDeVencimento="
+				+ DataDeVencimento + ", valor=" + valor + ", credito=" + credito + "]";
 	}
 	
 	
-	public void processamentoDeCompra(CartaoDeCredito cartao) throws ParseException {
-		double valorUmaParcela = this.getValor()/this.getQuantidadeDeParcelas();
-		double valorPorParcela =0;
-		
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		
-
-		String agora = "25/03/2020";
-		
-		java.util.Date aqui = sdf.parse(agora);
-		
-
-		for(int k=1;k<this.QuantidadeDeParcelas;k++) {
-			java.sql.Date now = new java.sql.Date(this.getDataDeVencimento().getTime());
-			Date data = adicionarMes(now, k);
-			valorPorParcela += valorUmaParcela;
-			
-			
-			this.parcela.add(new Parcela(k, data, valorPorParcela));
-			
-			
-			
-		}
-		
-		*/
-		
+	
+	
 	
 
 	

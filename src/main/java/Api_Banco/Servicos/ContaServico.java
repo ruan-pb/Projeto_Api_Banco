@@ -1,10 +1,11 @@
 package Api_Banco.Servicos;
 
 import java.io.IOException;
-
 import java.io.InputStream;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,7 +35,9 @@ import Api_Banco.Exceptions.ContaInexistente;
 import Api_Banco.Exceptions.ContaInvalida;
 import Api_Banco.Exceptions.ContaJaExisti;
 import Api_Banco.Exceptions.SaldoInsuficiente;
+import Api_Banco.Repositorio.CartaoRepositorio;
 import Api_Banco.Repositorio.ContaRepositorio;
+import Api_Banco.Repositorio.ParcelaRepositorio;
 
 @Service
 public class ContaServico {
@@ -46,6 +49,12 @@ public class ContaServico {
 	private JWTServico jwtServico;
 
 	private ModelMapper modelMapper;
+
+	@Autowired
+	private ParcelaRepositorio parcelaBD;
+	
+	@Autowired
+	private CartaoRepositorio cartaoBD;
 
 	public ContaServico() {
 	}
@@ -127,14 +136,20 @@ public class ContaServico {
 
 	}
 
-	public ContaSaqueDTO saque(Conta conta, String cabecalhoAutorizacao) {
-
+	public ContaSaqueDTO saque(ContaSaqueDTO valor, String cabecalhoAutorizacao) {
+		
+		
 		Optional<String> optRecupera = jwtServico.recuperaConta(cabecalhoAutorizacao);
+		
+		
 		Conta conta03 = validarConta(optRecupera);
+		
+		System.out.println("conta03"+conta03.getSaldo());
 
-		if (conta03.getSaldo() >= conta.getSaldo()) {// conta03.getSaldo() >= conta.getSaldo()
+		if (conta03.getSaldo() >= valor.getValor()) {// conta03.getSaldo() >= conta.getSaldo()
 
-			conta03.debitar(conta.getSaldo());
+			conta03.debitar(valor.getValor());
+			System.out.println(conta03.getSaldo());
 		} else {
 			throw new SaldoInsuficiente();
 		}
@@ -180,6 +195,7 @@ public class ContaServico {
 
 	public List<ListaDTO> HankindDeSaldos() {
 		List<Conta> lista = contaBD.findByOrderBySaldoDesc();
+
 		List<ListaDTO> listaDto = lista.stream().map(x -> new ListaDTO(x)).collect(Collectors.toList());
 		return listaDto;
 	}
@@ -225,68 +241,96 @@ public class ContaServico {
 
 	public Conta toEntity(InputTranferencia tranferencia) {
 		return modelMapper.map(tranferencia, Conta.class);
-	
+
 	}
-	
 
 	public Conta comprarCartaoDeCredito(InputCartaoDeCredito cartao) {
 		Optional<Conta> conta = contaBD.findByConta(cartao.getConta());
 		if (conta.isPresent()) {
-			if(conta.get().getConta().equals(cartao.getConta())) {
-				
+			if (conta.get().getConta().equals(cartao.getConta())) {
+
 				System.out.println(cartao.getConta());
 				System.out.println(cartao.getParcelas());
 				System.out.println(cartao.getValor());
 
 				CartaoDeCredito cartaoDeCredito = new CartaoDeCredito();
-				
+
+				cartaoDeCredito.setValor(cartao.getValor());
 				cartaoDeCredito.setFaturaAtual(cartao.getValor());
 				cartaoDeCredito.setLimiteDisponivel(cartao.getValor());
+				cartaoDeCredito.setNumeroDoCartao(cartao.getNumeroDoCartao());
 				
+				
+				
+				List<Parcela> proximasFaturas = new ArrayList<>();
+				Parcela parcela = new Parcela();
+				for (int k = 1; k <= cartao.getParcelas(); k++) {
+					Date parcelas = Date.valueOf(LocalDate.now().plusMonths(k));
+					
+					parcela.setDataDeVencimento(parcelas);
+					parcela.setQuantidadeDeParcelas(k);
+					parcela.setValor(cartaoDeCredito.getValor());
+					proximasFaturas.add(parcela);
+
+					
+				}
+				cartaoDeCredito.setProximasFaturas(proximasFaturas);
+
 				conta.get().setCredito(cartaoDeCredito);
-				
-				/*
-				conta.get().getCredito().setNumeroDoCartao("15881");
-				conta.get().getCredito().setFaturaAtual(cartao.getValor());
-				
-				
-				java.util.Date data = new java.util.Date();//data
-				java.sql.Date dataDaCompra = new java.sql.Date(data.getTime());
-				*/
+				//conta.get().getCredito().setId(cartaoDeCredito.getId());
 				conta.get().getCredito().setFaturaAtual(cartaoDeCredito.getFaturaAtual());
-				conta.get().getCredito().setLimiteDisponivel(cartaoDeCredito.getLimiteDisponivel());
-				//conta.get().getCredito().setDataDaCompra(dataDaCompra);
-				/*
-				conta.get().getCredito().getConta().setConta(cartao.getConta());
-				conta.get().getCredito().getConta().setAgencia(cartao.getAgencia());
-				*/
+				conta.get().getCredito().setConta(cartaoDeCredito.getConta());
+				conta.get().getCredito().setNumeroDoCartao(cartaoDeCredito.getNumeroDoCartao());
+				System.out.println(cartaoDeCredito.getLimiteDisponivel());
+				System.out.println(cartaoDeCredito.getLimiteDisponivel());
+
 				System.out.println(cartao.getConta());
 				System.out.println(cartao.getParcelas());
-				Parcela p = new Parcela(cartao.getParcelas(),cartao.getValor());
+				Parcela p = new Parcela(cartao.getParcelas(), cartao.getValor());
+
 				conta.get().getCredito().passandoCartao(p);
+				cartaoBD.save(cartaoDeCredito);
+				contaBD.save(conta.get());
+				parcelaBD.save(parcela);
+
 				
-				
-				/*
-				CartaoDeCredito cart = toEntity(cartao);
-				conta.get().setCredito(cart);
-		*/
-			}
-			else {
+			} else {
 				throw new ContaInvalida();
 			}
-			
 
-		}
-		else {
+		} else {
 			throw new ContaInexistente();
 		}
 		return conta.get();
 
 	}
+
 	public CartaoDeCredito toEntity(InputCartaoDeCredito cartao) {
 		return modelMapper.map(cartao, CartaoDeCredito.class);
-	
+
 	}
 	
+
+	public List<Parcela> adicionandoParcela(List<Parcela> parcelas) {
+		List<Parcela> parce = new ArrayList<>();
+		for (Parcela pp : parcelas) {
+			parce.add(pp);
+			parcelaBD.save(pp);
+		}
+		return parce;
+	}
+
+	public void adicionandoParcela(String id, Integer k) {
+		Optional<Conta> conta = contaBD.findByConta(id);
+		if (conta.isPresent()) {
+			Date parcelas = Date.valueOf(LocalDate.now().plusMonths(k));
+			System.out.println("data " + parcelas);
+			conta.get().getCredito().setDataDaCompra(parcelas); // o erro é aqui
+			System.out.println(conta.get().getCredito().getDataDaCompra());
+		}
+		else {
+			System.out.println("Não existe conta");
+		}
+	}
 
 }

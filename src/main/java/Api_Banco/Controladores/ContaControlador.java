@@ -70,9 +70,9 @@ public class ContaControlador {
 	}
 
 	@PutMapping("/sacar")
-	public ResponseEntity<ContaSaqueDTO> sacar(@RequestBody Conta conta, @RequestHeader("Authorization") String token) {
+	public ResponseEntity<ContaSaqueDTO> sacar(@RequestBody ContaSaqueDTO valor, @RequestHeader("Authorization") String token) {
 		try {
-			return new ResponseEntity<ContaSaqueDTO>(contaServico.saque(conta, token), HttpStatus.OK);
+			return new ResponseEntity<ContaSaqueDTO>(contaServico.saque(valor, token), HttpStatus.OK);
 		} catch (ContaInvalida e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		} catch (NoSuchElementException e) {
