@@ -255,6 +255,7 @@ public class ContaServico {
 
 				CartaoDeCredito cartaoDeCredito = new CartaoDeCredito();
 
+				cartaoDeCredito.setConta(conta.get());
 				cartaoDeCredito.setValor(cartao.getValor());
 				cartaoDeCredito.setFaturaAtual(cartao.getValor());
 				cartaoDeCredito.setLimiteDisponivel(cartao.getValor());
@@ -268,17 +269,18 @@ public class ContaServico {
 					Date parcelas = Date.valueOf(LocalDate.now().plusMonths(k));
 					
 					parcela.setDataDeVencimento(parcelas);
-					parcela.setQuantidadeDeParcelas(k);
-					parcela.setValor(cartaoDeCredito.getValor());
 					proximasFaturas.add(parcela);
 
 					
 				}
+				
+				parcela.setCredito(cartaoDeCredito);
+				parcela.setQuantidadeDeParcelas(cartao.getParcelas());
+				parcela.setValor(cartaoDeCredito.getValor());
 				cartaoDeCredito.setProximasFaturas(proximasFaturas);
 
 				conta.get().setCredito(cartaoDeCredito);
-				//conta.get().getCredito().setId(cartaoDeCredito.getId());
-				conta.get().getCredito().setFaturaAtual(cartaoDeCredito.getFaturaAtual());
+				conta.get().getCredito().setFaturaAtual(cartaoDeCredito.getFaturaAtual()/cartao.getParcelas());
 				conta.get().getCredito().setConta(cartaoDeCredito.getConta());
 				conta.get().getCredito().setNumeroDoCartao(cartaoDeCredito.getNumeroDoCartao());
 				System.out.println(cartaoDeCredito.getLimiteDisponivel());

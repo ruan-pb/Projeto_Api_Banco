@@ -75,7 +75,21 @@ public class Parcela {
 	}
 
 	public void setValor(double valorr) {
-		valor = valorr;
+		valor = valorr/this.QuantidadeDeParcelas;
+	}
+	
+	
+
+
+
+	public CartaoDeCredito getCredito() {
+		return credito;
+	}
+
+
+
+	public void setCredito(CartaoDeCredito credito) {
+		this.credito = credito;
 	}
 
 

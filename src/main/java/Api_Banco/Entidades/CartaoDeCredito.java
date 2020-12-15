@@ -1,13 +1,8 @@
 package Api_Banco.Entidades;
 
 import java.sql.Date;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
 //import java.text.ParseException;
 import java.util.List;
 
@@ -16,10 +11,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import Api_Banco.Exceptions.SaldoInsuficiente;
 
@@ -30,7 +26,7 @@ public class CartaoDeCredito {
 	@GeneratedValue( strategy = GenerationType.IDENTITY)
 	private Integer Id;
 	private String numeroDoCartao;
-	private double LimiteDisponivel;
+	private double LimiteDisponivel = 1000.0;
 	private double valor;
 	private double FaturaAtual;
 	
@@ -107,6 +103,7 @@ public class CartaoDeCredito {
 		this.ProximasFaturas.remove(parcela);
 	}
 
+	@JsonIgnore
 	public Conta getConta() {
 		return conta;
 	}
@@ -123,11 +120,6 @@ public class CartaoDeCredito {
 	}
 
 
-
-	/*
-	 * public void adicionarParcela(CartaoDeCredito c){ this.cartaoDeCredito.add(c);
-	 * }
-	 */
 	public void setConta(Conta conta) {
 		this.conta = conta;
 	}
@@ -146,7 +138,7 @@ public class CartaoDeCredito {
 	         
 				
 				
-				Date parcelas = Date.valueOf(LocalDate.now().plusMonths(k));
+				Date parcelas = Date.valueOf(LocalDate.now());
 				this.setDataDaCompra(parcelas);
 				p.setQuantidadeDeParcelas(k);
 				p.setValor(parcelaBasica);
