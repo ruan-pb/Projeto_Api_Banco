@@ -108,7 +108,7 @@ public class CartaoDeCredito {
 		return conta;
 	}
 	
-
+	@JsonIgnore
 	public List<Parcela> getProximasFaturas() {
 		return ProximasFaturas;
 	}
@@ -138,7 +138,7 @@ public class CartaoDeCredito {
 	         
 				
 				
-				Date parcelas = Date.valueOf(LocalDate.now());
+				Date parcelas = Date.valueOf(LocalDate.now().plusMonths(k));
 				this.setDataDaCompra(parcelas);
 				p.setQuantidadeDeParcelas(k);
 				p.setValor(parcelaBasica);
@@ -169,6 +169,11 @@ public class CartaoDeCredito {
 			throw new SaldoInsuficiente();
 		}
 
+	}
+	public void ultimaParcela(int quantidadeDeparcela) {
+		Parcela p = new Parcela();
+		Date parcelas = Date.valueOf(LocalDate.now().plusMonths(quantidadeDeparcela));
+		p.setDataDeVencimento(parcelas);
 	}
 
 
