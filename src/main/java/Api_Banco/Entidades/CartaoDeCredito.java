@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,29 +22,28 @@ import Api_Banco.Exceptions.SaldoInsuficiente;
 
 @Entity
 public class CartaoDeCredito {
-	
+
 	@Id
-	@GeneratedValue( strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer Id;
 	private String numeroDoCartao;
 	private double LimiteDisponivel = 1000.0;
+	
+	@Column(name = "valor_Da_Ultima_Compra")
 	private double valor;
 	private double FaturaAtual;
-	
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date DataDaCompra;
 
 	@OneToMany(mappedBy = "credito")
-	private List<Parcela> ProximasFaturas  =  new ArrayList<>();
+	private List<Parcela> ProximasFaturas = new ArrayList<>();
 
 	@OneToOne(mappedBy = "credito", cascade = CascadeType.ALL)
 	private Conta conta;
 
 	public CartaoDeCredito() {
 	}
-	
-	
 
 	public CartaoDeCredito(Integer id, String numeroDoCartao, double limiteDisponivel) {
 		super();
@@ -51,8 +51,6 @@ public class CartaoDeCredito {
 		this.numeroDoCartao = numeroDoCartao;
 		LimiteDisponivel = limiteDisponivel;
 	}
-
-
 
 	public Integer getId() {
 		return Id;
@@ -67,7 +65,8 @@ public class CartaoDeCredito {
 	}
 
 	public void setLimiteDisponivel(double limiteDisponivel) {
-		LimiteDisponivel -= limiteDisponivel;
+		LimiteDisponivel = limiteDisponivel;
+
 	}
 
 	public String getNumeroDoCartao() {
@@ -84,6 +83,11 @@ public class CartaoDeCredito {
 
 	public void setFaturaAtual(double faturaAtual) {
 		this.FaturaAtual = faturaAtual;
+	}
+	
+	public void alterarFaturalAtual(double valor) {
+		this.FaturaAtual = valor;
+		
 	}
 
 	public Date getDataDaCompra() {
@@ -107,18 +111,15 @@ public class CartaoDeCredito {
 	public Conta getConta() {
 		return conta;
 	}
-	
+
 	@JsonIgnore
 	public List<Parcela> getProximasFaturas() {
 		return ProximasFaturas;
 	}
 
-
-
 	public void setProximasFaturas(List<Parcela> proximasFaturas) {
 		ProximasFaturas = proximasFaturas;
 	}
-
 
 	public void setConta(Conta conta) {
 		this.conta = conta;
@@ -132,62 +133,47 @@ public class CartaoDeCredito {
 		double limite = 1000;
 		if (disponivel < limite) {
 
-			
 			for (int k = 1; k < parcela.getQuantidadeDeParcelas(); k++) {
-				
-	         
-				
-				
+
 				Date parcelas = Date.valueOf(LocalDate.now().plusMonths(k));
 				this.setDataDaCompra(parcelas);
 				p.setQuantidadeDeParcelas(k);
 				p.setValor(parcelaBasica);
 				p.setDataDeVencimento(this.getDataDaCompra());
-				
-				
-				
-				System.out.println("quantidade de parcelas"+p.getQuantidadeDeParcelas());
-				System.out.println("Data de vencimento"+p.getDataDeVencimento());
-				System.out.println("Valor de cada parcela"+p.getValor());
-				
+
+				System.out.println("quantidade de parcelas" + p.getQuantidadeDeParcelas());
+				System.out.println("Data de vencimento" + p.getDataDeVencimento());
+				System.out.println("Valor de cada parcela" + p.getValor());
+
 				ProximasFaturas.add(p);
-				
+
 				System.out.println("---------------Começo---------------------------");
 				System.out.println("lista de todas as faturas ");
 
 				ProximasFaturas.forEach(System.out::println);
-				
+
 				System.out.println("-------------------FIM-----------------------");
 
-				
 			}
-			
-
-			
 
 		} else {
 			throw new SaldoInsuficiente();
 		}
 
 	}
+
 	public void ultimaParcela(int quantidadeDeparcela) {
 		Parcela p = new Parcela();
 		Date parcelas = Date.valueOf(LocalDate.now().plusMonths(quantidadeDeparcela));
 		p.setDataDeVencimento(parcelas);
 	}
 
-
-
 	public double getValor() {
 		return valor;
 	}
 
-
-
 	public void setValor(double valor) {
 		this.valor = valor;
 	}
-
-	
 
 }

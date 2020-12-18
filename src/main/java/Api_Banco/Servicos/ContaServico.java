@@ -244,66 +244,75 @@ public class ContaServico {
 
 	public Conta comprarCartaoDeCredito(InputCartaoDeCredito cartao) {
 		Optional<Conta> conta = contaBD.findByConta(cartao.getConta());
-		//List<Parcela> proximasFaturas = new ArrayList<>();
-		
+		// List<Parcela> proximasFaturas = new ArrayList<>();
+
 		Parcela parcela = new Parcela();
-		Date parcelas = Date.valueOf(LocalDate.now().plusMonths(cartao.getParcelas()));
-		
+		Date faturas = Date.valueOf(LocalDate.now().plusMonths(cartao.getParcelas()));
+
 		Date DataDaCompra = Date.valueOf(LocalDate.now());
 		if (conta.isPresent()) {
 			if (conta.get().getConta().equals(cartao.getConta())) {
 				CartaoDeCredito cartaoDeCredito = new CartaoDeCredito();
-			
-				if(conta.get().getCredito()==null) {
-				
 
-					cartaoDeCredito.setConta(conta.get());
-					cartaoDeCredito.setValor(cartao.getValor());
-					cartaoDeCredito.setFaturaAtual(cartao.getValor());
-					cartaoDeCredito.setLimiteDisponivel(cartao.getValor());
-					cartaoDeCredito.setNumeroDoCartao(cartao.getNumeroDoCartao());
-					cartaoDeCredito.setDataDaCompra(DataDaCompra);
-					cartaoBD.save(cartaoDeCredito);
-					conta.get().setCredito(cartaoDeCredito);
-					
-					
-				}
-				else {
-					cartaoDeCredito.setId(Integer.parseInt(cartao.getConta()));
-					cartaoDeCredito.setValor(cartao.getValor());
-					System.out.println("Fatura Atual "+conta.get().getCredito().getFaturaAtual());
-					System.out.println("limite disponivel "+conta.get().getCredito().getLimiteDisponivel());
-					System.out.println("resultado da fatural atual"+(cartao.getValor()-conta.get().getCredito().getFaturaAtual()));
-					System.out.println("resultado do limite disponivel atual"+(conta.get().getCredito().getLimiteDisponivel()-cartao.getValor()));
-					cartaoDeCredito.setFaturaAtual(conta.get().getCredito().getFaturaAtual()+cartao.getValor());
-					cartaoDeCredito.setLimiteDisponivel(conta.get().getCredito().getLimiteDisponivel()-cartao.getValor());
-					cartaoDeCredito.setNumeroDoCartao(conta.get().getCredito().getNumeroDoCartao());
-					cartaoDeCredito.setDataDaCompra(DataDaCompra);
-					cartaoBD.save(cartaoDeCredito);
-					conta.get().setCredito(cartaoDeCredito);
-					
-				}
-				
+				if (conta.get().getCredito() == null) {
 
-				
+					if (cartao.getValor() <= 1000) {
+						cartaoDeCredito.setConta(conta.get());
+						cartaoDeCredito.setValor(cartao.getValor());
+						cartaoDeCredito.setFaturaAtual(cartao.getValor() / cartao.getParcelas());
+						cartaoDeCredito.setLimiteDisponivel(cartaoDeCredito.getLimiteDisponivel() - cartao.getValor());
+						cartaoDeCredito.setNumeroDoCartao(cartao.getNumeroDoCartao());
+						cartaoDeCredito.setDataDaCompra(DataDaCompra);
+						cartaoBD.save(cartaoDeCredito);
+						conta.get().setCredito(cartaoDeCredito);
+
+					} else {
+						throw new SaldoInsuficiente();
+					}
+				} else {
+
+					if (conta.get().getCredito().getLimiteDisponivel() <= 1000) {
+
+						cartaoDeCredito.setId(conta.get().getCredito().getId());
+						// cartaoDeCredito.setId(Integer.parseInt(cartao.getConta()));
+
+						cartaoDeCredito.setValor(cartao.getValor());
+						System.out.println("Fatura Atual " + conta.get().getCredito().getFaturaAtual());
+						System.out.println("limite disponivel " + conta.get().getCredito().getLimiteDisponivel());
+						System.out.println("resultado da fatural atual " + (conta.get().getCredito().getFaturaAtual()));
+						System.out.println("resultado do limite disponivel atual "
+								+ (conta.get().getCredito().getLimiteDisponivel() - cartao.getValor()));
+
+						cartaoDeCredito.setFaturaAtual(cartao.getValor());
+						cartaoDeCredito.alterarFaturalAtual(
+						conta.get().getCredito().getFaturaAtual() + (cartao.getValor() / cartao.getParcelas()));
+						cartaoDeCredito.setLimiteDisponivel(
+						conta.get().getCredito().getLimiteDisponivel() - cartao.getValor());
+						cartaoDeCredito.setNumeroDoCartao(conta.get().getCredito().getNumeroDoCartao());
+						cartaoDeCredito.setDataDaCompra(DataDaCompra);
+						cartaoBD.save(cartaoDeCredito);
+						conta.get().setCredito(cartaoDeCredito);
+
+					}
+					else {
+						throw new SaldoInsuficiente();
+					}
+
+				}
 
 				parcela.setCredito(cartaoDeCredito);
 				parcela.setQuantidadeDeParcelas(cartao.getParcelas());
-				
+
 				parcela.setValor(cartaoDeCredito.getValor());
-				
-				parcela.setDataDeVencimento(parcelas);
-				
-				//proximasFaturas.add(parcela);
-				//cartaoDeCredito.setProximasFaturas(proximasFaturas);
-				
-				
+
+				parcela.setDataDeVencimento(faturas);
+
 				conta.get().setCredito(cartaoDeCredito);
-				conta.get().getCredito().setFaturaAtual(cartaoDeCredito.getFaturaAtual() / cartao.getParcelas());
+				// conta.get().getCredito().setFaturaAtual(cartaoDeCredito.getFaturaAtual() /
+				// cartao.getParcelas());
 				conta.get().getCredito().setConta(cartaoDeCredito.getConta());
 				conta.get().getCredito().setNumeroDoCartao(cartaoDeCredito.getNumeroDoCartao());
-				
-				
+
 				contaBD.save(conta.get());
 				parcelaBD.save(parcela);
 
@@ -317,14 +326,14 @@ public class ContaServico {
 		return conta.get();
 
 	}
-	
+
 	public Conta getOne(String contaId) {
 		Optional<Conta> conta = contaBD.findByConta(contaId);
-		if(conta != null) {
+		if (conta != null) {
 			return conta.get();
 		}
 		throw new ContaInvalida("Conta invalida");
-		
+
 	}
 
 	public CartaoDeCredito toEntity(InputCartaoDeCredito cartao) {
