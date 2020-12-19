@@ -2,7 +2,6 @@ package Api_Banco.Entidades;
 
 import java.sql.Date;
 
-import javax.annotation.Generated;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.Columns;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 
 
@@ -25,13 +24,15 @@ public class Parcela {
 	private int QuantidadeDeParcelas;
 	
 	@Column(name = "ultima_parcela")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date DataDeVencimento;
 	private double valor;
 	
+	/*
 	@ManyToOne
 	@JoinColumn(name="parcela_emprestimo")
 	private Emprestimo emprestimo;
-	
+	*/
 	@ManyToOne
 	@JoinColumn(name="parcela_credito")
 	private CartaoDeCredito credito;
@@ -82,6 +83,30 @@ public class Parcela {
 
 
 
+	public Integer getId() {
+		return id;
+	}
+
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+/*
+
+	public Emprestimo getEmprestimo() {
+		return emprestimo;
+	}
+
+
+
+	public void setEmprestimo(Emprestimo emprestimo) {
+		this.emprestimo = emprestimo;
+	}
+
+
+*/
 	public CartaoDeCredito getCredito() {
 		return credito;
 	}

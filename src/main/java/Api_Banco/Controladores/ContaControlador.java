@@ -1,5 +1,6 @@
 package Api_Banco.Controladores;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -22,10 +23,12 @@ import Api_Banco.DTOS.ContaSaqueDTO;
 import Api_Banco.DTOS.InputCartaoDeCredito;
 import Api_Banco.DTOS.InputCriarConta;
 import Api_Banco.DTOS.InputDeposito;
+import Api_Banco.DTOS.InputEmprestimo;
 import Api_Banco.DTOS.InputTranferencia;
 import Api_Banco.DTOS.ListaDTO;
 import Api_Banco.DTOS.TranferenciaDTO;
 import Api_Banco.Entidades.Conta;
+import Api_Banco.Entidades.Emprestimo;
 import Api_Banco.Exceptions.ContaInexistente;
 import Api_Banco.Exceptions.ContaInvalida;
 import Api_Banco.Exceptions.ContaJaExisti;
@@ -162,6 +165,21 @@ public class ContaControlador {
 		catch(ContaInexistente e){
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+	}
+	@PutMapping("/emprestimo")
+	public ResponseEntity<Emprestimo> emprestimo (@RequestBody InputEmprestimo emprestimo) throws ParseException{
+		try {
+			return new ResponseEntity<Emprestimo>(contaServico.emprestimo(emprestimo),HttpStatus.OK);
+		}
+		catch(ContaInvalida e) {
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			
+		}
+		catch(ContaInexistente e) {
+			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+		}
+		
+		
 	}
 	
 }

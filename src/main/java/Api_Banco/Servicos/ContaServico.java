@@ -3,6 +3,7 @@ package Api_Banco.Servicos;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Date;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -25,18 +26,23 @@ import Api_Banco.DTOS.ContaSaqueDTO;
 import Api_Banco.DTOS.InputCartaoDeCredito;
 import Api_Banco.DTOS.InputCriarConta;
 import Api_Banco.DTOS.InputDeposito;
+import Api_Banco.DTOS.InputEmprestimo;
+import Api_Banco.DTOS.InputPoupancaDTO;
 import Api_Banco.DTOS.InputTranferencia;
 import Api_Banco.DTOS.ListaDTO;
 import Api_Banco.DTOS.TranferenciaDTO;
 import Api_Banco.Entidades.CartaoDeCredito;
 import Api_Banco.Entidades.Conta;
+import Api_Banco.Entidades.Emprestimo;
 import Api_Banco.Entidades.Parcela;
+import Api_Banco.Entidades.Poupanca;
 import Api_Banco.Exceptions.ContaInexistente;
 import Api_Banco.Exceptions.ContaInvalida;
 import Api_Banco.Exceptions.ContaJaExisti;
 import Api_Banco.Exceptions.SaldoInsuficiente;
 import Api_Banco.Repositorio.CartaoRepositorio;
 import Api_Banco.Repositorio.ContaRepositorio;
+import Api_Banco.Repositorio.EmprestimoRepositorio;
 import Api_Banco.Repositorio.ParcelaRepositorio;
 
 @Service
@@ -55,6 +61,11 @@ public class ContaServico {
 
 	@Autowired
 	private CartaoRepositorio cartaoBD;
+	
+	@Autowired
+	private EmprestimoRepositorio emprestimoBD;
+	
+	
 
 	public ContaServico() {
 	}
@@ -271,7 +282,7 @@ public class ContaServico {
 					}
 				} else {
 
-					if (conta.get().getCredito().getLimiteDisponivel() <= 1000) {
+					if (conta.get().getCredito().getLimiteDisponivel() >= cartao.getValor()) {
 
 						cartaoDeCredito.setId(conta.get().getCredito().getId());
 						// cartaoDeCredito.setId(Integer.parseInt(cartao.getConta()));
@@ -293,8 +304,7 @@ public class ContaServico {
 						cartaoBD.save(cartaoDeCredito);
 						conta.get().setCredito(cartaoDeCredito);
 
-					}
-					else {
+					} else {
 						throw new SaldoInsuficiente();
 					}
 
@@ -325,6 +335,56 @@ public class ContaServico {
 		}
 		return conta.get();
 
+	}
+
+	public Emprestimo emprestimo(InputEmprestimo emprestimo) throws ParseException {
+		Date dataEmprestimo = Date.valueOf(LocalDate.now().plusMonths(2));
+		Date terminaPagarEmprestimo = Date.valueOf(LocalDate.now().plusMonths(emprestimo.getQuantidadeDeParcelas()+2));
+		Optional<Conta> conta = contaBD.findByConta(emprestimo.getId());
+		System.out.println(emprestimo.getQuantidadeDeParcelas());
+		Emprestimo empe = new Emprestimo();
+		
+		if(conta.isPresent()) {
+			if(conta.get().getEmmprestimo().getLimite() >= emprestimo.getValor())
+			empe.setConta(conta.get());
+			System.out.println(empe.getValor());
+			double valorTotal = emprestimo.getValor()*empe.getJuros();
+			empe.setValor(valorTotal);
+			empe.setValorDeCadaParcela(valorTotal/emprestimo.getQuantidadeDeParcelas());
+			System.out.println(empe.getValor());
+			empe.setDataDoEmprestimo(dataEmprestimo);
+			empe.setUltimaParcela(terminaPagarEmprestimo);
+			empe.setLimite(empe.getLimite()-emprestimo.getValor());
+			empe.setQuantidadeDeParcelas(emprestimo.getQuantidadeDeParcelas());
+	
+			emprestimoBD.save(empe);
+			
+			conta.get().setEmmprestimo(empe);
+			
+			
+			
+			
+			
+			
+			
+		}
+		contaBD.save(conta.get());
+		return empe;
+
+	}
+	
+	public Poupanca poupanca(InputPoupancaDTO poupanca) {
+		Optional<Conta> conta = contaBD.findByConta(poupanca.getId());
+		Date dataEmprestimo = Date.valueOf(LocalDate.now());
+		Poupanca poupancaP = new Poupanca();
+		
+		if(conta.isPresent()) {
+			poupancaP.setConta(conta.get());
+			poupancaP.setDataDeAbertura(dataEmprestimo);
+			
+			poupancaP.setSaldo(poupanca.getDeposito());
+		}
+		
 	}
 
 	public Conta getOne(String contaId) {
