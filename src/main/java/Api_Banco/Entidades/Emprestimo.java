@@ -1,10 +1,7 @@
 package Api_Banco.Entidades;
 
+import java.io.Serializable;
 import java.sql.Date;
-import java.text.ParseException;
-//import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,30 +9,27 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class Emprestimo {
+public class Emprestimo implements Serializable{
 	
-	
-	
+
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer Id; 
 	private double Limite = 1000; 
+	
 	@Column(name = "Valor_total_do_Emprestimo")
 	private double Valor;
 	
 	private double ValorDeCadaParcela;
 	private int parcelas;
-	/*
-	@OneToMany(mappedBy = "emprestimo")
-	private List<Parcela> parcela;
-	*/
+	
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	@Column(name = "inicio_do_Emprestimo")
 	private Date DataDoEmprestimo;

@@ -1,5 +1,6 @@
 package Api_Banco.Entidades;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 import javax.persistence.CascadeType;
@@ -10,14 +11,19 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class Poupanca {
+public class Poupanca implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer Id; 
 	private double Saldo;
-	private static double Juros = 1.8;
+	private static double Juros = 1.1;
 	
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date DataDeAbertura;
@@ -52,7 +58,7 @@ public class Poupanca {
 	}
 	
 	
-
+	@JsonIgnore
 	public Conta getConta() {
 		return conta;
 	}

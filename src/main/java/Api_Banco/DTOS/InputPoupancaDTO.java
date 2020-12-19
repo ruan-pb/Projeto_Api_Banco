@@ -2,11 +2,13 @@ package Api_Banco.DTOS;
 
 public class InputPoupancaDTO {
 	
-	private String id;
+	private String Id; 
 	private double deposito;
+	
+	
 	public InputPoupancaDTO(String id, double deposito) {
 		super();
-		this.id = id;
+		this.Id = id;
 		this.deposito = deposito;
 	}
 	
@@ -15,10 +17,10 @@ public class InputPoupancaDTO {
 	}
 
 	public String getId() {
-		return id;
+		return Id;
 	}
 	public void setId(String id) {
-		this.id = id;
+		this.Id = id;
 	}
 	public double getDeposito() {
 		return deposito;
