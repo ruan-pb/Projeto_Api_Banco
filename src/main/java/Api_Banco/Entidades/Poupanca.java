@@ -1,6 +1,7 @@
 package Api_Banco.Entidades;
 
 import java.io.Serializable;
+
 import java.sql.Date;
 
 import javax.persistence.CascadeType;
@@ -15,10 +16,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Poupanca implements Serializable{
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer Id; 
@@ -75,8 +75,6 @@ public class Poupanca implements Serializable{
 		DataDeAbertura = dataDeAbertura;
 	}
 	
-	public double ganhosComJuros() {
-		return this.Saldo*this.Juros;
-	}
+	
 
 }

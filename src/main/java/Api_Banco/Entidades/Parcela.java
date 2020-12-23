@@ -1,5 +1,6 @@
 package Api_Banco.Entidades;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 import javax.persistence.Column;
@@ -15,8 +16,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 
 @Entity
-public class Parcela {
+public class Parcela implements Serializable{
 	
+	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -28,22 +32,12 @@ public class Parcela {
 	private Date DataDeVencimento;
 	private double valor;
 	
-	/*
-	@ManyToOne
-	@JoinColumn(name="parcela_emprestimo")
-	private Emprestimo emprestimo;
-	*/
 	@ManyToOne
 	@JoinColumn(name="parcela_credito")
 	private CartaoDeCredito credito;
-	
-	
 
-	
 	public Parcela() {}
 	
-	
-
 	public Parcela(int quantidadeDeParcelas, Date dataDeVencimento, double valordaParcela) {
 		QuantidadeDeParcelas = quantidadeDeParcelas;
 		valor = valordaParcela;
@@ -52,8 +46,6 @@ public class Parcela {
 		QuantidadeDeParcelas = quantidadeDeParcelas;
 		valor = valordaParcela;
 	}
-
-
 
 	public int getQuantidadeDeParcelas() {
 		return QuantidadeDeParcelas;
@@ -80,44 +72,21 @@ public class Parcela {
 	}
 	
 	
-
-
-
 	public Integer getId() {
 		return id;
 	}
-
-
 
 	public void setId(Integer id) {
 		this.id = id;
 	}
 
-/*
-
-	public Emprestimo getEmprestimo() {
-		return emprestimo;
-	}
-
-
-
-	public void setEmprestimo(Emprestimo emprestimo) {
-		this.emprestimo = emprestimo;
-	}
-
-
-*/
 	public CartaoDeCredito getCredito() {
 		return credito;
 	}
 
-
-
 	public void setCredito(CartaoDeCredito credito) {
 		this.credito = credito;
 	}
-
-
 
 	@Override
 	public String toString() {

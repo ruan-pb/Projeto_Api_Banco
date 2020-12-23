@@ -1,6 +1,7 @@
 package Api_Banco.Servicos;
 
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,7 +13,7 @@ import Api_Banco.DTOS.EnderecoCpfDTO;
 import Api_Banco.DTOS.EnderecoNomeDTO;
 import Api_Banco.DTOS.ListaDTOCliente;
 import Api_Banco.Entidades.Cliente;
-import Api_Banco.Exceptions.ContaInexistente;
+import Api_Banco.Exceptions.ContaNaoExiste;
 import Api_Banco.Repositorio.ClienteRepositorio;
 
 @Service
@@ -34,7 +35,7 @@ public class ClienteServico {
 		Optional<Cliente> cli = clienteBD.findByCpf(cpf.getCpf());
 		
 		if(cli.isEmpty()) {
-			throw new ContaInexistente();
+			throw new ContaNaoExiste();
 		}
 		return new EnderecoCpfDTO(cli);
 		

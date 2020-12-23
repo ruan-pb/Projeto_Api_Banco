@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpServerErrorException.BadGateway;
 
+import Api_Banco.DTOS.CartaoDTO;
 import Api_Banco.DTOS.ContaDepositoDTO;
 import Api_Banco.DTOS.ContaSaqueDTO;
 import Api_Banco.DTOS.InputCartaoDeCredito;
@@ -31,10 +32,9 @@ import Api_Banco.DTOS.PoupancaDTO;
 import Api_Banco.DTOS.TranferenciaDTO;
 import Api_Banco.Entidades.Conta;
 import Api_Banco.Entidades.Emprestimo;
-import Api_Banco.Entidades.Poupanca;
-import Api_Banco.Exceptions.ContaInexistente;
 import Api_Banco.Exceptions.ContaInvalida;
 import Api_Banco.Exceptions.ContaJaExisti;
+import Api_Banco.Exceptions.ContaNaoExiste;
 import Api_Banco.Exceptions.SaldoInsuficiente;
 import Api_Banco.Servicos.ContaServico;
 
@@ -65,7 +65,6 @@ public class ContaControlador {
 	public ResponseEntity<ContaDepositoDTO> depositar(@RequestBody InputDeposito conta) {
 		try {
 		
-			//Conta conta1 = toConta(conta);
 			return new ResponseEntity<ContaDepositoDTO>(contaServico.depositar(conta), HttpStatus.OK);
 		} catch (ContaInvalida e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -93,7 +92,7 @@ public class ContaControlador {
 	public ResponseEntity<Conta> buscarConta(@PathVariable String id) {
 		try {
 			return new ResponseEntity<Conta>(contaServico.buscarConta(id), HttpStatus.OK);
-		} catch (ContaInexistente e) {
+		} catch (ContaNaoExiste e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
@@ -142,7 +141,7 @@ public class ContaControlador {
 		try {
 			return new ResponseEntity<TranferenciaDTO>(contaServico.tranferir(tranferencia),HttpStatus.OK);
 		}
-		catch(ContaInexistente e) {
+		catch(ContaNaoExiste e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		catch(ContaInvalida e) {
@@ -153,9 +152,9 @@ public class ContaControlador {
 		}
 	}
 	@PutMapping("/cartaoDeCredito")
-	public ResponseEntity<Conta> cartaoDeCredito(@RequestBody InputCartaoDeCredito cartao){
+	public ResponseEntity<CartaoDTO> cartaoDeCredito(@RequestBody InputCartaoDeCredito cartao){
 		try {
-			return new ResponseEntity<Conta>(contaServico.comprarCartaoDeCredito(cartao),HttpStatus.OK);
+			return new ResponseEntity<CartaoDTO>(contaServico.comprarCartaoDeCredito(cartao),HttpStatus.OK);
 		}
 		catch(SaldoInsuficiente e) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -165,7 +164,7 @@ public class ContaControlador {
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 			
 		}
-		catch(ContaInexistente e){
+		catch(ContaNaoExiste e){
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 	}
@@ -178,7 +177,7 @@ public class ContaControlador {
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 			
 		}
-		catch(ContaInexistente e) {
+		catch(ContaNaoExiste e) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		
@@ -192,7 +191,7 @@ public class ContaControlador {
 		catch(ContaInvalida e) {
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
-		catch(ContaInexistente e) {
+		catch(ContaNaoExiste e) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
 		

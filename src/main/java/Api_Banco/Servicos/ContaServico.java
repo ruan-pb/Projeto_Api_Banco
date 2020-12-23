@@ -1,6 +1,7 @@
 package Api_Banco.Servicos;
 
 import java.io.IOException;
+
 import java.io.InputStream;
 import java.sql.Date;
 import java.text.ParseException;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import Api_Banco.DTOS.CartaoDTO;
 import Api_Banco.DTOS.ContaDepositoDTO;
 import Api_Banco.DTOS.ContaSaqueDTO;
 import Api_Banco.DTOS.InputCartaoDeCredito;
@@ -35,7 +37,7 @@ import Api_Banco.Entidades.Conta;
 import Api_Banco.Entidades.Emprestimo;
 import Api_Banco.Entidades.Parcela;
 import Api_Banco.Entidades.Poupanca;
-import Api_Banco.Exceptions.ContaInexistente;
+import Api_Banco.Exceptions.ContaNaoExiste;
 import Api_Banco.Exceptions.ContaInvalida;
 import Api_Banco.Exceptions.ContaJaExisti;
 import Api_Banco.Exceptions.LimiteInsuficiente;
@@ -109,7 +111,7 @@ public class ContaServico {
 	public Conta getConta(String numeroConta) {
 		Optional<Conta> optConta = contaBD.findByConta(numeroConta);
 		if (optConta.isEmpty()) {
-			throw new ContaInexistente();
+			throw new ContaNaoExiste();
 		}
 		return optConta.get();
 	}
@@ -172,7 +174,7 @@ public class ContaServico {
 	public Conta buscarConta(String id) {
 		Optional<Conta> optConta = contaBD.findByConta(id);
 		if (optConta.isEmpty()) {
-			throw new ContaInexistente();
+			throw new ContaNaoExiste();
 
 		}
 		return optConta.get();
@@ -181,11 +183,11 @@ public class ContaServico {
 
 	public Conta validarConta(Optional<String> id) {
 		if (id.isEmpty()) {
-			throw new ContaInexistente();
+			throw new ContaNaoExiste();
 		}
 		Optional<Conta> conta = contaBD.findByConta(id.get());
 		if (conta.isEmpty()) {
-			throw new ContaInexistente();
+			throw new ContaNaoExiste();
 		}
 		return conta.get();
 
@@ -241,7 +243,7 @@ public class ContaServico {
 			}
 
 		} else {
-			throw new ContaInexistente();
+			throw new ContaNaoExiste();
 
 		}
 		return new TranferenciaDTO(transferencia);
@@ -250,16 +252,16 @@ public class ContaServico {
 
 	
 
-	public Conta comprarCartaoDeCredito(InputCartaoDeCredito cartao) {
+	public CartaoDTO comprarCartaoDeCredito(InputCartaoDeCredito cartao) {
 		Optional<Conta> conta = contaBD.findByConta(cartao.getConta());
 
 		Parcela parcela = new Parcela();
 		Date faturas = Date.valueOf(LocalDate.now().plusMonths(cartao.getParcelas()));
-
+		CartaoDeCredito cartaoDeCredito = new CartaoDeCredito();
 		Date DataDaCompra = Date.valueOf(LocalDate.now());
 		if (conta.isPresent()) {
 			if (conta.get().getConta().equals(cartao.getConta())) {
-				CartaoDeCredito cartaoDeCredito = new CartaoDeCredito();
+				
 
 				if (conta.get().getCredito() == null) {
 
@@ -300,6 +302,8 @@ public class ContaServico {
 				parcela.setQuantidadeDeParcelas(cartao.getParcelas());
 				parcela.setValor(cartaoDeCredito.getValor());
 				parcela.setDataDeVencimento(faturas);
+				
+				//cartaoDeCredito.passandoCartao(parcela);
 
 				conta.get().setCredito(cartaoDeCredito);
 				conta.get().getCredito().setConta(cartaoDeCredito.getConta());
@@ -313,9 +317,9 @@ public class ContaServico {
 			}
 
 		} else {
-			throw new ContaInexistente();
+			throw new ContaNaoExiste();
 		}
-		return conta.get();
+		return new CartaoDTO(cartaoDeCredito);
 
 	}
 
@@ -324,44 +328,37 @@ public class ContaServico {
 		Date terminaPagarEmprestimo = Date.valueOf(LocalDate.now().plusMonths(emprestimo.getQuantidadeDeParcelas()+2));
 		
 		Optional<Conta> conta = contaBD.findByConta(emprestimo.getId());
-		System.out.println(emprestimo.getValor());
-		System.out.println(emprestimo.getId());
-		System.out.println(emprestimo.getQuantidadeDeParcelas());
-		Emprestimo empe = new Emprestimo();
+		Emprestimo emprestimo01 = new Emprestimo();
 
 		if(conta.isPresent()) {
 			if(conta.get().getEmmprestimo()==null) {
 				
 				
-				empe.setConta(conta.get());
-				double valorTotal = emprestimo.getValor()*empe.getJuros();
-				empe.setValor(valorTotal);
-				empe.setValorDeCadaParcela(valorTotal/emprestimo.getQuantidadeDeParcelas());
-				System.out.println(empe.getValor());
-				empe.setDataDoEmprestimo(dataEmprestimo);
-				empe.setUltimaParcela(terminaPagarEmprestimo);
-				empe.setLimite(empe.getLimite()-emprestimo.getValor());
-				empe.setQuantidadeDeParcelas(emprestimo.getQuantidadeDeParcelas());
+				emprestimo01.setConta(conta.get());
+				double valorTotal = emprestimo.getValor()*emprestimo01.getJuros();
+				emprestimo01.setValor(valorTotal);
+				emprestimo01.setValorDeCadaParcela(valorTotal/emprestimo.getQuantidadeDeParcelas());
+				emprestimo01.setDataDoEmprestimo(dataEmprestimo);
+				emprestimo01.setUltimaParcela(terminaPagarEmprestimo);
+				emprestimo01.setLimite(emprestimo01.getLimite()-emprestimo.getValor());
+				emprestimo01.setQuantidadeDeParcelas(emprestimo.getQuantidadeDeParcelas());
 	
-				emprestimoBD.save(empe);
+				emprestimoBD.save(emprestimo01);
 	
-				conta.get().setEmmprestimo(empe);
+				conta.get().setEmmprestimo(emprestimo01);
 			}
+			
 			else {
-				System.out.println("entrei aqui");
+				throw new LimiteInsuficiente();
 			}
 			}
 
 
 
 		contaBD.save(conta.get());
-		return empe;
+		return emprestimo01;
 
 	}
-		
-
-		
-	
 
 	public PoupancaDTO poupanca(InputPoupancaDTO poupanca) {
 		Optional<Conta> conta = contaBD.findByConta(poupanca.getId());
@@ -372,7 +369,7 @@ public class ContaServico {
 			if(conta.get().getPoupanca()==null) {
 				poupancaP.setConta(conta.get());
 				poupancaP.setDataDeAbertura(dataEmprestimo);
-				poupancaP.setSaldo(poupanca.getDeposito() + (dataEmprestimo.getTime()/60000/600/60 * poupancaP.getJuros()));
+				poupancaP.setSaldo(poupanca.getDeposito()  * poupancaP.getJuros());
 				poupancaBD.save(poupancaP);
 	
 				conta.get().setPoupanca(poupancaP);
@@ -380,12 +377,13 @@ public class ContaServico {
 			else {
 				poupancaP.setId(conta.get().getPoupanca().getId());
 				poupancaP.setDataDeAbertura(conta.get().getPoupanca().getDataDeAbertura());
-				poupancaP.setSaldo(poupanca.getDeposito() + (dataEmprestimo.getTime()/60000/600/60 * poupancaP.getJuros()));
+				poupancaP.setSaldo(poupancaP.getSaldo() +poupanca.getDeposito() *poupancaP.getJuros());
 				poupancaBD.save(poupancaP);
 	
 				conta.get().setPoupanca(poupancaP);
 			}
-		} else {
+		} 
+		else {
 			throw new ContaInvalida("conta não encontrada");
 		}
 		contaBD.save(conta.get());

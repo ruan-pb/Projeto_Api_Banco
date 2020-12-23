@@ -1,8 +1,6 @@
 package Api_Banco.Entidades;
 
-import java.sql.Date;
-
-
+import java.io.Serializable;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -12,19 +10,19 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-public class Cliente {
+public class Cliente implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@Size(max = 11)
+	@NotBlank
 	private String cpf;
 	
 	@Size(max = 20)
@@ -37,10 +35,7 @@ public class Cliente {
 	@OneToOne(cascade= CascadeType.ALL)
 	private Endereco endereco;
 	
-	/*
-	@JsonFormat(pattern = "dd/MM/yyyy")
-	private Date dataDeAniversário;
-	*/
+	
 	@JsonIgnore
 	@OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
 	private Conta conta;

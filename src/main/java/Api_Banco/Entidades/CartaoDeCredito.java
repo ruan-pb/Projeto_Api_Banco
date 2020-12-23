@@ -1,5 +1,6 @@
 package Api_Banco.Entidades;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -21,11 +23,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import Api_Banco.Exceptions.SaldoInsuficiente;
 
 @Entity
-public class CartaoDeCredito {
+public class CartaoDeCredito implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer Id;
+	
+	@Size(max = 16)
 	private String numeroDoCartao;
 	private double LimiteDisponivel = 1000.0;
 	
@@ -141,20 +147,17 @@ public class CartaoDeCredito {
 				p.setValor(parcelaBasica);
 				p.setDataDeVencimento(this.getDataDaCompra());
 
-				System.out.println("quantidade de parcelas" + p.getQuantidadeDeParcelas());
-				System.out.println("Data de vencimento" + p.getDataDeVencimento());
-				System.out.println("Valor de cada parcela" + p.getValor());
-
 				ProximasFaturas.add(p);
 
-				System.out.println("---------------Começo---------------------------");
-				System.out.println("lista de todas as faturas ");
-
-				ProximasFaturas.forEach(System.out::println);
-
-				System.out.println("-------------------FIM-----------------------");
+				
 
 			}
+			System.out.println("---------------Começo---------------------------");
+			System.out.println("lista de todas as faturas ");
+
+			ProximasFaturas.forEach(System.out::println);
+
+			System.out.println("-------------------FIM-----------------------");
 
 		} else {
 			throw new SaldoInsuficiente();

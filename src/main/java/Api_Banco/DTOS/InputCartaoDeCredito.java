@@ -1,12 +1,6 @@
 package Api_Banco.DTOS;
 
 
-
-import org.hibernate.annotations.Cascade;
-
-
-import Api_Banco.Entidades.Parcela;
-
 public class InputCartaoDeCredito {
 	private String conta;
 	private String Agencia;

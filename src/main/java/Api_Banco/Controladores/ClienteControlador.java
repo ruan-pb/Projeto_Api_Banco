@@ -2,11 +2,12 @@ package Api_Banco.Controladores;
 
 import java.util.List;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,7 @@ import Api_Banco.DTOS.EnderecoCpfDTO;
 import Api_Banco.DTOS.EnderecoNomeDTO;
 import Api_Banco.DTOS.ListaDTOCliente;
 import Api_Banco.Entidades.Cliente;
-import Api_Banco.Exceptions.ContaInexistente;
+import Api_Banco.Exceptions.ContaNaoExiste;
 import Api_Banco.Servicos.ClienteServico;
 
 @RestController
@@ -42,7 +43,7 @@ public class ClienteControlador {
 		try {
 			return new ResponseEntity<EnderecoCpfDTO>(clienteServico.encontraEnderecoPorCpf(cpf),HttpStatus.OK);
 		}
-		catch(ContaInexistente e) {
+		catch(ContaNaoExiste e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
@@ -51,7 +52,7 @@ public class ClienteControlador {
 		try {
 			return new ResponseEntity<List<EnderecoNomeDTO>>(clienteServico.encontraEnderecoPorNome(nome),HttpStatus.OK);
 		}
-		catch(ContaInexistente e) {
+		catch(ContaNaoExiste e) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
