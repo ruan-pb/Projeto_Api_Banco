@@ -32,18 +32,17 @@ public class ClienteServico {
 	}
 	
 	public EnderecoCpfDTO encontraEnderecoPorCpf(Cliente cpf) {
-		Optional<Cliente> cli = clienteBD.findByCpf(cpf.getCpf());
+		Optional<Cliente> client01 = clienteBD.findByCpf(cpf.getCpf());
 		
-		if(cli.isEmpty()) {
+		if(client01.isEmpty()) {
 			throw new ContaNaoExiste();
 		}
-		return new EnderecoCpfDTO(cli);
+		return new EnderecoCpfDTO(client01);
 		
 		
 	}
 	public List<EnderecoNomeDTO> encontraEnderecoPorNome(Cliente clienteNome) {
 	System.out.println(clienteNome.getNome());
-		//Optional<Cliente> cli = clienteBD.findByNome(nome.toLowerCase());
 		List<Cliente> lista = new ArrayList<>();
 		for(Cliente cliente:clienteBD.findAll()){
 			System.out.println(clienteNome.getNome());

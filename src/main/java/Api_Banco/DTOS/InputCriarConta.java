@@ -9,13 +9,7 @@ public class InputCriarConta {
 	private double saldoInicial;
 	private String cpf;
 	private String nome;
-	/*
-	private String telefone;
-	private String rua;
-	private String bairro;
-	private String cidade;
-	private String estado;
-	*/
+	
 	public InputCriarConta(Conta conta) {
 		String camuflagem = conta.getSenha().replace(conta.getSenha(), "*****");
 		this.conta = conta.getConta();
@@ -24,14 +18,7 @@ public class InputCriarConta {
 		this.saldoInicial = conta.getSaldo();
 		this.cpf = conta.getCliente().getCpf();
 		this.nome = conta.getCliente().getNome();
-		/*
-		this.telefone = conta.getCliente().getTelefone();
 		
-		this.rua = conta.getCliente().getEndereco().getRua();
-		this.bairro = conta.getCliente().getEndereco().getBairro();
-		this.cidade = conta.getCliente().getEndereco().getCidade();
-		this.estado = conta.getCliente().getEndereco().getEstado();
-		*/
 	}
 	public InputCriarConta() {}
 

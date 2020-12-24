@@ -123,8 +123,6 @@ public class ContaServico {
 			if (conta.getCliente().getCpf().equals(cpf)) {
 
 				existi = true;
-				System.out.println("CPF do Banco" + conta.getCliente().getCpf());
-				System.out.println("CPF do parametro " + cpf);
 			} else {
 				existi = false;
 			}
@@ -155,12 +153,11 @@ public class ContaServico {
 
 		Conta conta03 = validarConta(optRecupera);
 
-		System.out.println("conta03" + conta03.getSaldo());
 
-		if (conta03.getSaldo() >= valor.getValor()) {// conta03.getSaldo() >= conta.getSaldo()
+
+		if (conta03.getSaldo() >= valor.getValor()) {
 
 			conta03.debitar(valor.getValor());
-			System.out.println(conta03.getSaldo());
 		} else {
 			throw new SaldoInsuficiente();
 		}
@@ -216,20 +213,13 @@ public class ContaServico {
 		Optional<Conta> ContaOrigem = contaBD.findByConta(transferencia.getContaOrigem());
 		Optional<Conta> ContaDestino = contaBD.findByConta(transferencia.getContaDestino());
 
-		System.out.println("conta origem " + ContaOrigem.get().getConta());
-
-		System.out.println("conta destino " + ContaDestino.get().getConta());
-
 		if (ContaOrigem.isPresent() && ContaDestino.isPresent()) {
 			if (ContaOrigem.get().getSenha().equals(transferencia.getSenha())) {
 				if (ContaOrigem.get().getSaldo() >= transferencia.getValor()) {
 
 					double valorDeTranferencia = transferencia.getValor();
-					System.out.println(valorDeTranferencia);
 					ContaOrigem.get().debitar(transferencia.getValor());
-					System.out.println("conta origem " + ContaOrigem.get().getSaldo());
 					ContaDestino.get().creditar(valorDeTranferencia);
-					System.out.println("conta destino " + ContaDestino.get().getSaldo());
 
 					contaBD.save(ContaOrigem.get());
 					contaBD.save(ContaDestino.get());
@@ -369,7 +359,7 @@ public class ContaServico {
 			if(conta.get().getPoupanca()==null) {
 				poupancaP.setConta(conta.get());
 				poupancaP.setDataDeAbertura(dataEmprestimo);
-				poupancaP.setSaldo(poupanca.getDeposito()  * poupancaP.getJuros());
+				poupancaP.setSaldo(poupanca.getDeposito() * poupancaP.getJuros());
 				poupancaBD.save(poupancaP);
 	
 				conta.get().setPoupanca(poupancaP);
@@ -377,7 +367,7 @@ public class ContaServico {
 			else {
 				poupancaP.setId(conta.get().getPoupanca().getId());
 				poupancaP.setDataDeAbertura(conta.get().getPoupanca().getDataDeAbertura());
-				poupancaP.setSaldo(poupancaP.getSaldo() +poupanca.getDeposito() *poupancaP.getJuros());
+				poupancaP.setSaldo(poupancaP.getSaldo() +(poupanca.getDeposito()*poupancaP.getJuros()));
 				poupancaBD.save(poupancaP);
 	
 				conta.get().setPoupanca(poupancaP);
